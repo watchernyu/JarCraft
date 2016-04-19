@@ -1,0 +1,12 @@
+Player0: Watcher's first state-based alg
+Player1: Random
+--- units: 8
+Units on each side: 24
+--- units: 2
+Units on each side: 6
+--- units: 4
+Units on each side: 12
+--- units: 8
+Units on each side: 24
+--- units: 16
+Units on each side: 48

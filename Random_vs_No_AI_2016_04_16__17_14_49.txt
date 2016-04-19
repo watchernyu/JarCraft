@@ -1,0 +1,12 @@
+Player0: Random
+Player1: No_AI
+--- units: 1
+Units on each side: 3
+--- units: 2
+Units on each side: 6
+--- units: 4
+Units on each side: 12
+--- units: 8
+Units on each side: 24
+--- units: 16
+Units on each side: 48
