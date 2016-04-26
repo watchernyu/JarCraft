@@ -19,7 +19,6 @@ public class UnitAction {
 		_player=255;
 		_moveType=UnitActionTypes.NONE;
 		_moveIndex=255;
-
 	}
 
 	public UnitAction( int unitIndex, int player, UnitActionTypes type, int moveIndex, Position dest){
@@ -79,6 +78,10 @@ public class UnitAction {
 	public String toString(){
 		return this._moveIndex+","+this._player+","+this._unit+","+this.moveString()+","+this.pos();
 		
+	}
+	
+	public int getUnitIndex(){
+		return _unit;
 	}
 	
 	public UnitAction clone(){

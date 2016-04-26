@@ -34,11 +34,34 @@ import bwmcts.sparcraft.players.*;
 
 public class Test implements BWAPIEventListener  {
 	
-	private static boolean graphics = true;
+	private static boolean graphics = false;
 	
 	JNIBWAPI bwapi;
 	
 	StringBuffer buf;
+	
+	public static void main0(String[] args) throws Exception{
+		ArrayList<ArrayList<Integer>> DNA = new ArrayList<ArrayList<Integer>>();
+		ArrayList<Integer> a = new ArrayList<Integer>();
+		ArrayList<Integer> b = new ArrayList<Integer>();
+		a.add(4);
+		a.add(6);
+		a.add(8);
+		b.add(3);
+		b.add(2);
+		b.add(6);
+		DNA.add(a);DNA.add(b);
+		//mutate(DNA);
+		System.out.println(DNA);
+		Player_Watcher3 p = new Player_Watcher3(0);
+		p.mutate(DNA);
+		System.out.println(DNA);
+		p.mutate(DNA);
+		System.out.println(DNA);
+		p.mutate(DNA);
+		System.out.println(DNA);
+	}
+	
 	
 	public static void main(String[] args) throws Exception{
 		System.out.println("Create TC instance");
@@ -76,11 +99,12 @@ public class Test implements BWAPIEventListener  {
 				new ClusteringConfig(1, 6, new DynamicKMeans(30.0)));
 
 		Player p1;
-		p1 = new Player_Kite(0);
+		p1 = new Player_Watcher5(0);
+		//p1 = new Player_Kite(0);
 		//p1 = new Player_Watcher(0);
 		//p1 = new Player_NoOverKillAttackValue(0);
 		//Player p1 = new Player_NoOverKillAttackValue(0);
-		//Player p1 = new UctLogic(tc.bwapi, guctcdA, 40);
+		//p1 = new UctLogic(tc.bwapi, guctcdA, 40);
 		//Player p1 = new Player_AttackClosest2(0);
 		//Player p1 = new Player_Defense(0);
 		//Player p1 = new Player_ClusteredUnitStateToUnitAction(0);
@@ -89,9 +113,9 @@ public class Test implements BWAPIEventListener  {
 		//Player p2 = new Player_Nothing(1);
 		Player p2;
 		//p2=new Player_Random(1);
-		p2 = new Player_AttackClosest(1);
-		//Player p2 = new Player_NoOverKillAttackValue(1);
-		//Player p2 = new UctLogic(tc.bwapi, new UCTCD(new UctConfig(1)),40);
+		//p2 = new Player_AttackClosest(1);
+		p2 = new Player_NoOverKillAttackValue(1);
+		//p2 = new UctLogic(tc.bwapi, new UCTCD(new UctConfig(1)),40);
 		//Player p2 = new RandomScriptLogic(1);
 		//Player p2 = new UctLogic(tc.bwapi, guctcdB, 40);
 		
@@ -210,15 +234,18 @@ public class Test implements BWAPIEventListener  {
 		
 		HashMap<UnitTypes, Integer> unitsA = new HashMap<UnitType.UnitTypes, Integer>();
 		//unitsA.put(UnitTypes.Terran_SCV, n/2);
-		//unitsA.put(UnitTypes.Terran_Marine, n);
+		//unitsA.put(UnitTypes.Terran_Marine, 6);
 		//unitsA.put(UnitTypes.Terran_Goliath, n);
-		unitsA.put(UnitTypes.Protoss_Dragoon, n);
+		unitsA.put(UnitTypes.Protoss_Dragoon, 10);
+		unitsA.put(UnitTypes.Protoss_Zealot, 6);
 		//unitsA.put(UnitTypes.Terran_Ghost, 1);
+		//NEED TO CHANGE NUMBER OF UNITS AT WATCHER5
 		
 		HashMap<UnitTypes, Integer> unitsB = new HashMap<UnitType.UnitTypes, Integer>();
-		unitsB.put(UnitTypes.Protoss_Dragoon, n);
+		unitsB.put(UnitTypes.Protoss_Dragoon, 10);
+		unitsB.put(UnitTypes.Protoss_Zealot, 6);
 		//unitsB.put(UnitTypes.Terran_SCV, n/2);
-		//unitsB.put(UnitTypes.Terran_Marine, n);
+		//unitsB.put(UnitTypes.Terran_Marine, 6);
 		//unitsB.put(UnitTypes.Terran_Goliath, n);
 		
 		Constants.Max_Units = n*2;
@@ -235,7 +262,7 @@ public class Test implements BWAPIEventListener  {
 				wins++;			
 			if(i%1==0){
 				//System.out.println("Score average: " + average(results) + "\tDeviation: " + deviation(results));
-				System.out.println("Win average: " + ((double)wins)/((double)i));
+				System.out.println("Games: "+i+" Win average: " + ((double)wins)/((double)i));
 				buf.append("Win average: " + ((double)wins)/((double)i)+"\r\n");
 			}
 		}
@@ -825,6 +852,7 @@ public class Test implements BWAPIEventListener  {
 	    // StateEvalScore has two components, a numerical score and a number of Movement actions performed by each player
 	    // with this evaluation, positive val means win, negative means loss, 0 means tie
 	    //System.out.println("Last game score: "+score._val);
+	    System.out.println("Player One score: "+score._val);
 	    return score._val;
 	}
 	

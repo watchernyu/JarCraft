@@ -15,11 +15,11 @@ import bwmcts.sparcraft.Unit;
 import bwmcts.sparcraft.UnitAction;
 import bwmcts.sparcraft.UnitActionTypes;
 
-public class Player_AttackClosest extends Player {
+public class Player_AttackWeakest extends Player {
 	
 	private int _id=0;
 	
-	public Player_AttackClosest(int playerID) {
+	public Player_AttackWeakest(int playerID) {
 		_id=playerID;
 		setID(playerID);
 	}
@@ -34,6 +34,10 @@ public class Player_AttackClosest extends Player {
 			int closestMoveIndex				=0;
 			int actionDistance	=Integer.MAX_VALUE;
 			int closestMoveDist	=Integer.MAX_VALUE;
+			
+			int hp=0;
+			int minhp = 9999;
+			
 
 			Unit ourUnit = state.getUnit(ID(), u);
 			
@@ -47,9 +51,11 @@ public class Player_AttackClosest extends Player {
 					Unit target			=state.getUnit(GameState.getEnemy(move.player()), move.index());
 					int dist			=ourUnit.getDistanceSqToUnit(target, state.getTime());
 
-					if (dist < actionDistance)
+					hp = target.currentHP();
+					
+					if (hp < minhp)
 					{
-						actionDistance = dist;
+						minhp = hp;
 						actionMoveIndex = m;
 						foundUnitAction = true;
 					}

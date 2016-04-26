@@ -20,7 +20,7 @@ public class GameState {
 	        
 	Unit[][] _units=new Unit[Constants.Num_Players][Constants.Max_Moves];
 	      
-	int[][] _unitIndex=new int[Constants.Num_Players][Constants.Max_Moves];
+	public int[][] _unitIndex=new int[Constants.Num_Players][Constants.Max_Moves];
 	List<Unit> _neutralUnits;
 	
 	public int[]  _numUnits=new int[Constants.Num_Players];
@@ -691,6 +691,152 @@ public class GameState {
 		}
 		
 	}
+	
+	public void generateDnaMoves(HashMap<Integer,List<UnitAction>> moves, int playerIndex) {
+		moves.clear();
+
+	    // which is the enemy player
+		int enemyPlayer  = getEnemy(playerIndex);
+
+	    // make sure this player can move right now
+	    //int canMove=whoCanMove().ordinal();
+	    /*if (whoCanMove().ordinal() == enemyPlayer)
+	    {
+	    	System.out.println("GameState Error - Called generateMoves() for a player that cannot currently move");
+	        return;//throw new Exception("GameState Error - Called generateMoves() for a player that cannot currently move");
+	    }*/
+
+		// we are interested in all simultaneous moves
+		// so return all units which can move at the same time as the first
+		int firstUnitMoveTime = getUnit(playerIndex, 0).firstTimeFree();
+		Unit unit;	
+		Unit enemyUnit;
+		int moveDistance=0;
+		double timeUntilAttack=0;
+		for (int unitIndex=0; unitIndex < _numUnits[playerIndex]; unitIndex++)
+		{
+			// unit reference
+			unit=getUnit(playerIndex,unitIndex);
+			if (unit==null || unit.firstTimeFree() != firstUnitMoveTime){break;}
+			// if this unit can't move at the same time as the first
+			/*if (unit.firstTimeFree() != firstUnitMoveTime)
+			{
+				// stop checking
+				break;
+			}*/
+/*
+			if (unit.previousActionTime() == _currentTime && _currentTime != 0)
+			{
+	            System.out.println("Previous Move Took 0 Time: " + unit.previousAction().moveString());
+	            return;
+			}
+			*/
+			ArrayList<UnitAction> actionTemp=new ArrayList<UnitAction>();
+			// generate movement moves
+			if (unit.isMobile())
+			{
+	            // In order to not move when we could be shooting, we want to move for the minimum of:
+	            // 1) default move distance move time
+	            // 2) time until unit can attack, or if it can attack, the next cooldown
+	            timeUntilAttack         = unit.nextAttackActionTime() - _currentTime;
+	           // timeUntilAttack                 = ;
+
+	            // the default move duration
+	           // double defaultMoveDuration      = (double)Constants.Move_Distance / unit.speed();
+
+	            // if we can currently attack
+	            //double chosenTime  = Math.min(timeUntilAttack, defaultMoveDuration);
+
+	            // the chosen movement distance
+	            moveDistance      = (int) (Math.min(timeUntilAttack == 0 ? unit.attackCoolDown : timeUntilAttack, (double)Constants.Move_Distance / unit.speed()) * unit.speed());
+	            //moveDistance      = (int) (Math.min(timeUntilAttack == 0 ? unit.attackCoolDown : timeUntilAttack, unit.moveCoolDown) * unit.speed());
+	            // DEBUG: If chosen move distance is ever 0, something is wrong
+	            if (moveDistance == 0)
+	            {
+	            	System.out.println("Move Action with distance 0 generated");
+	            	continue;
+	            }
+
+	            // we are only generating moves in the cardinal direction specified in common.h
+				for (int d=0; d<Constants.Num_Directions; d++)
+				{			
+	                // the direction of this movement
+	              	//Position dir= new Position(Constants.Move_Dir[d][0], Constants.Move_Dir[d][1]);
+	            
+	                /*if (moveDistance == 0)
+	                {
+	                    System.out.printf("%lf %lf %lf\n", timeUntilAttack, defaultMoveDuration, chosenTime);
+	                }*/
+
+	                // the final destination position of the unit
+	                Position dest = new Position(unit.pos().x+moveDistance*Constants.Move_DirX[d],unit.pos().y+ moveDistance*Constants.Move_DirY[d]);
+	                
+	                // if that poisition on the map is walkable
+	                if (isWalkable(dest) || (unit.type().isFlyer() && isFlyable(dest)))
+					{
+	                    // add the move to the MoveArray
+						actionTemp.add(new UnitAction(unitIndex, playerIndex, UnitActionTypes.MOVE, d, dest));
+					}else{
+						actionTemp.add(new UnitAction(unitIndex, playerIndex, UnitActionTypes.PASS, 0,unit.pos()));
+					}
+				}
+			}
+			
+
+			// generate attack moves
+			if (unit.canAttackNow())
+			{
+				
+				for (int u=0; u<_numUnits[enemyPlayer]; u++)
+				{
+					enemyUnit=getUnit(enemyPlayer, u);
+
+					if (unit.canAttackTarget(enemyUnit, _currentTime))
+					{
+						actionTemp.add(new UnitAction(unitIndex, playerIndex, UnitActionTypes.ATTACK, u, enemyUnit.pos()));
+	                    //moves.add(UnitAction(unitIndex, playerIndex, UnitActionTypes::ATTACK, unit.ID()));
+					}
+				}
+			}
+			else if (unit.canHealNow())
+			{
+				for (int u=0; u<_numUnits[playerIndex]; u++)
+				{
+					// units cannot heal themselves in broodwar
+					if (u == unitIndex)
+					{
+						continue;
+					}
+
+					Unit ourUnit=getUnit(playerIndex, u);
+					if (ourUnit!=null && ourUnit.isAlive()){
+						if (unit.canHealTarget(ourUnit, _currentTime))
+						{
+							actionTemp.add(new UnitAction(unitIndex, playerIndex, UnitActionTypes.HEAL, u,unit.pos()));
+		                    //moves.add(UnitAction(unitIndex, playerIndex, UnitActionTypes::HEAL, unit.ID()));
+						}
+					} else {
+						break;
+					}
+				}
+			}
+			// generate the wait move if it can't attack yet
+			else if (unit._unitType.getID() != UnitTypes.Terran_Medic.ordinal())
+			{
+				actionTemp.add(new UnitAction(unitIndex, playerIndex, UnitActionTypes.RELOAD, 0,unit.pos()));
+			}
+
+			// if no moves were generated for this unit, it must be issued a 'PASS' move
+			if (actionTemp.isEmpty())
+			{
+				actionTemp.add(new UnitAction(unitIndex, playerIndex, UnitActionTypes.PASS, 0,unit.pos()));
+			}
+			moves.put(unitIndex, actionTemp);
+		}
+		
+	}
+	
+	
 	public void makeMoves(List<UnitAction> moves){
 		 if (moves.size() > 0) {
 			//if (getUnit(moves.get(0)._player,moves.get(0)._unit).firstTimeFree()!=_currentTime)

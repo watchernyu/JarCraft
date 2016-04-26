@@ -14,12 +14,12 @@ import bwmcts.sparcraft.Unit;
 import bwmcts.sparcraft.UnitAction;
 import bwmcts.sparcraft.UnitActionTypes;
 
-public class Player_Kite extends Player {
+public class Player_Retreat extends Player {
 	
 	private int _id=0;
 	private int enemy;
 	
-	public Player_Kite(int playerID) {
+	public Player_Retreat(int playerID) {
 		_id=playerID;
 		setID(playerID);
 		enemy=GameState.getEnemy(_id);
@@ -121,7 +121,7 @@ public class Player_Kite extends Player {
 				//otherwise get back into the fight
 				else
 				{
-					bestMoveIndex = closestMoveIndex;
+					bestMoveIndex = furthestMoveIndex;
 				}
 			}
 			
@@ -130,6 +130,6 @@ public class Player_Kite extends Player {
 	}
 	
 	public String toString(){
-		return "Kite";
+		return "Retreat";
 	}
 }
