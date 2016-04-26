@@ -29,6 +29,10 @@ public class Player_Watcher5 extends Player {
 	private int enemy;
 	Random ran;
 	ArrayList<Player> scripts;
+	int numOfUnits=0;
+	boolean showBestDna = false;
+	boolean allowInitRandomMutation = false;
+	int EVALUTIONMETHOD = 0;//0 means LTD2, 1 means playout
 
 	public Player_Watcher5(int playerID) {
 		_id = playerID;
@@ -40,9 +44,13 @@ public class Player_Watcher5 extends Player {
 		scripts = new ArrayList<Player>();
 		//scripts.add(new Player_AttackClosest(playerID));
 		scripts.add(new Player_NoOverKillAttackValue(playerID));
-		scripts.add(new Player_KiteDPS(playerID));
+		//scripts.add(new Player_KiteDPS(playerID));
+		//scripts.add(new Player_AttackAndMove(playerID));
 		//scripts.add(new Player_AttackWeakest(playerID));
-		//scripts.add(new Player_Retreat(playerID));
+		scripts.add(new Player_Retreat(playerID));
+		scripts.add(new Player_RetreatFar(playerID));
+		scripts.add(new Player_Forward(playerID));
+		scripts.add(new Player_ForwardFar(playerID));
 		//scripts.add(new Player_Defense(playerID));
 		//currently only support playerID = 0;
 	}
@@ -52,9 +60,8 @@ public class Player_Watcher5 extends Player {
 		List<UnitAction> actions;
 		int bestMoveIndex = 0;
 		UnitAction move;
-		int futureSteps = 6;
-		int numOfMutations = 30;
-		int numOfUnits = 16;
+		int futureSteps = 3;
+		int numOfMutations = 10;
 		int numOfScripts = scripts.size();
 		//DNA initialization
 		ArrayList<ArrayList<Integer>> DNA = new ArrayList<ArrayList<Integer>>();
@@ -70,7 +77,41 @@ public class Player_Watcher5 extends Player {
 		ArrayList<Integer> bestDna = new ArrayList<Integer>();
 		
 		//first try all the scripts individually
-		for(int s=0;s<numOfScripts;s++){
+		if(scripts.size()>1){ //currently this part means mutating from retreat/NOKAV #1
+			for(int k=0;k<futureSteps;k++){
+				for(int i=0;i<numOfUnits;i++){
+					DNA.get(k).set(i, 0);
+				}
+			}
+			//System.out.println("BestScore: "+dnaBestScore+" DNA: "+bestDna);
+			for(int i=0;i<numOfMutations;i++){
+				this.mutateZeroOneGroup(DNA);
+				dnaScore = this.dnaEvalGroup(state, DNA);
+				if(dnaScore>dnaBestScore){
+					dnaBestScore = dnaScore;
+					bestDna = copy(DNA.get(0));
+				}
+			}
+		}
+		
+		if(scripts.size()>1){ //currently this part means mutating from retreat/NOKAV #2
+			for(int k=0;k<futureSteps;k++){
+				for(int i=0;i<numOfUnits;i++){
+					DNA.get(k).set(i, 1);
+				}
+			}
+			//System.out.println("BestScore: "+dnaBestScore+" DNA: "+bestDna);
+			for(int i=0;i<numOfMutations;i++){
+				this.mutateZeroOneGroup(DNA);
+				dnaScore = this.dnaEvalGroup(state, DNA);
+				if(dnaScore>dnaBestScore){
+					dnaBestScore = dnaScore;
+					bestDna = copy(DNA.get(0));
+				}
+			}
+		}
+		
+		for(int s=0;s<1;s++){ //currently this part means mutating from pure NOKAV
 			for(int k=0;k<futureSteps;k++){
 				for(int i=0;i<numOfUnits;i++){
 					DNA.get(k).set(i, s);
@@ -82,7 +123,7 @@ public class Player_Watcher5 extends Player {
 				bestDna = copy(DNA.get(0));
 			}
 			//System.out.println("BestScore: "+dnaBestScore+" DNA: "+bestDna);
-			for(int i=0;i<15;i++){//15 mutations
+			for(int i=0;i<numOfMutations;i++){//15 mutations
 				this.mutateGroup(DNA);
 				dnaScore = this.dnaEvalGroup(state, DNA);
 				if(dnaScore>dnaBestScore){
@@ -91,26 +132,34 @@ public class Player_Watcher5 extends Player {
 				}
 			}
 		}
+		
 		//System.out.println("Best Score: "+dnaBestScore +" DNA: "+bestDna);
 		
-		for(int k=0;k<futureSteps;k++){
-			for(int i=0;i<numOfUnits;i++){
-				DNA.get(k).set(i,ran.nextInt(numOfScripts));
-			}
-		}
-		
-		//mutation started
-		for(int i=0;i<numOfMutations;i++){//100 mutations
-			this.mutateGroup(DNA);
-			dnaScore = this.dnaEvalGroup(state, DNA);
-			if(dnaScore>dnaBestScore){
-				dnaBestScore = dnaScore;
-				bestDna = copy(DNA.get(0));
+		if(allowInitRandomMutation){
+			for(int randomcase = 0;randomcase<2;randomcase++){
+				for(int k=0;k<futureSteps;k++){
+					for(int i=0;i<numOfUnits;i++){
+						DNA.get(k).set(i,ran.nextInt(numOfScripts));
+					}
+				}
+				
+				//mutation started
+				for(int i=0;i<numOfMutations;i++){
+					this.mutateGroup(DNA);
+					dnaScore = this.dnaEvalGroup(state, DNA);
+					if(dnaScore>dnaBestScore){
+						dnaBestScore = dnaScore;
+						bestDna = copy(DNA.get(0));
+					}
+				}
 			}
 		}
 		
 		//mutation ended
-		//System.out.println("BestScore: "+dnaBestScore+" DNA: "+bestDna);
+		if(showBestDna){
+			System.out.println("BestScore: "+dnaBestScore+" DNA: "+bestDna);
+		}
+		
 		dnaMoves(state,bestDna,moves,moveVec);
 	}
 	
@@ -148,13 +197,28 @@ public class Player_Watcher5 extends Player {
 	
 	public void mutateGroup(ArrayList<ArrayList<Integer>> DNA) {
 		// helper function to mutate a DNA, according to some rate.
-		Double rate = 0.2;
+		Double rate = 0.3;
 		for(int i=0;i<DNA.size();i++){
 			for(int j=0;j<DNA.get(0).size();j++){
 				Double mut = ran.nextDouble();
 				ArrayList<Integer> gene = DNA.get(i);
 				if (mut < rate) {
 					int newGene = ran.nextInt(this.scripts.size());
+					gene.set(j, newGene);
+				}
+			}
+		}
+	}
+	
+	public void mutateZeroOneGroup(ArrayList<ArrayList<Integer>> DNA) {
+		// helper function to mutate a DNA, according to some rate.
+		Double rate = 0.3;
+		for(int i=0;i<DNA.size();i++){
+			for(int j=0;j<DNA.get(0).size();j++){
+				Double mut = ran.nextDouble();
+				ArrayList<Integer> gene = DNA.get(i);
+				if (mut < rate) {
+					int newGene = ran.nextInt(2); //only give 0 or 1 so only NOKAV or retreat
 					gene.set(j, newGene);
 				}
 			}
@@ -172,10 +236,14 @@ public class Player_Watcher5 extends Player {
 		GameState sc = currentState.clone(); // sc for state clone
 		Game gc = new Game(sc, new Player_NoOverKillAttackValue(this.ID()),
 				new Player_NoOverKillAttackValue(this.enemy), 200, false, scripts); //send scripts to game...
-		return gc.dnaEvalGroup(DNA);
+		return gc.dnaEvalGroup(DNA,EVALUTIONMETHOD);
 	}
 
+	public void setNumUnit(int n){
+		this.numOfUnits = n;
+	}
+	
 	public String toString() {
-		return "Watcher's first state-based alg";
+		return "Online Evolution";
 	}
 }

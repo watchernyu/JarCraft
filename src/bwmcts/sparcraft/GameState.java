@@ -363,6 +363,33 @@ public class GameState {
 		return getUnit(enemyPlayer, minUnitInd);
 		//return getUnit(getEnemy(player),_closestMoveIndex[player][unitIndex]);
 	}
+	
+	public Unit getFarthestEnemyUnit(int player, int unitIndex){
+		int enemyPlayer=getEnemy(player);
+		Position myUnitPosition=getUnit(player,unitIndex).currentPosition(_currentTime);
+
+		int maxDist = -1; 
+		int maxUnitInd=0;
+	    //int minUnitID=255;
+
+		//Position currentPos = myUnit.currentPosition(_currentTime);
+		int distSq=0;
+		for (int u=0; u<_numUnits[enemyPlayer]; u++)
+		{
+	        distSq = myUnitPosition.getDistanceSq(getUnit(enemyPlayer, u).currentPosition(_currentTime));
+			if ((distSq > maxDist))
+			{
+				maxDist = distSq;
+				maxUnitInd = u;
+
+			}
+
+		}
+
+		return getUnit(enemyPlayer, maxUnitInd);
+		//return getUnit(getEnemy(player),_closestMoveIndex[player][unitIndex]);
+	}
+	
 	public Unit getClosestEnemyUnit(Position myUnitPosition,int enemyPlayer,int minDist,int minUnitInd,int distSq){
 
 
@@ -405,6 +432,35 @@ public class GameState {
 
 		return getUnit(player, minUnitInd);
 	}
+	
+	public Unit getFarthestOurUnit(int player, int unitIndex){
+		Unit myUnit=getUnit(player,unitIndex);
+
+		int maxDist=-1;
+		int maxUnitInd=0;
+
+		Position currentPos = myUnit.currentPosition(_currentTime);
+
+		for (int u=0; u<_numUnits[player]; u++)
+		{
+			if (u == unitIndex || getUnit(player, u).canHeal())
+			{
+				continue;
+			}
+
+			//size_t distSq(myUnit.distSq(getUnit(enemyPlayer,u)));
+			int distSq=currentPos.getDistanceSq(getUnit(player, u).currentPosition(_currentTime));
+
+			if (distSq > maxDist)
+			{
+				maxDist = distSq;
+				maxUnitInd = u;
+			}
+		}
+
+		return getUnit(player, maxUnitInd);
+	}
+	
 	public Unit getUnitDirect(int player, int unit){
 		return _units[player][unit];
 	}

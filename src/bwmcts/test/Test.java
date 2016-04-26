@@ -98,8 +98,10 @@ public class Test implements BWAPIEventListener  {
 		FlatGUCTCD flatGuctcdB = new FlatGUCTCD(new UctConfig(1, true), 
 				new ClusteringConfig(1, 6, new DynamicKMeans(30.0)));
 
-		Player p1;
+		Player_Watcher5 p1;
+		//Player p1;
 		p1 = new Player_Watcher5(0);
+		//p1 = new Player_AttackAndMove(0);
 		//p1 = new Player_Kite(0);
 		//p1 = new Player_Watcher(0);
 		//p1 = new Player_NoOverKillAttackValue(0);
@@ -114,8 +116,9 @@ public class Test implements BWAPIEventListener  {
 		Player p2;
 		//p2=new Player_Random(1);
 		//p2 = new Player_AttackClosest(1);
-		p2 = new Player_NoOverKillAttackValue(1);
-		//p2 = new UctLogic(tc.bwapi, new UCTCD(new UctConfig(1)),40);
+		//p2 = new Player_KiteDPS(1);
+		//p2 = new Player_NoOverKillAttackValue(1);
+		p2 = new UctLogic(tc.bwapi, new UCTCD(new UctConfig(1)),40);
 		//Player p2 = new RandomScriptLogic(1);
 		//Player p2 = new UctLogic(tc.bwapi, guctcdB, 40);
 		
@@ -125,7 +128,9 @@ public class Test implements BWAPIEventListener  {
 		tc.buf.append("Player0: "+p1.toString()+"\r\n");
 		tc.buf.append("Player1: "+p2.toString()+"\r\n");
 		
-		tc.newTest(p1, p2, 100, new int[]{8,2,4,8,16});
+		//tc.newTest(p1, p2, 100, new int[]{4,8,16});
+		tc.newEvoTest(p1, p2, 100, new int[]{4,8,16});
+		//tc.newEvoTest2(p1, p2, 100, new int[]{4,8,16});
 		//tc.dragoonZTest(p1, p2, 10, new int[]{8,32,80,112,144});
 		
 		try {
@@ -210,6 +215,25 @@ public class Test implements BWAPIEventListener  {
 		*/
 	}
 
+	private void newEvoTest(Player_Watcher5 p1, Player p2, int runs, int[] n) {
+		//THIS ONLY ALLOWS PLAYER1 TO BE EVO CONTROLLER
+		// Combat size
+		//int[] n = new int[]{8,16,32,50};
+		//runs is the number of runs
+		//n is the size of army
+		for(Integer i : n){
+			try {
+				p1.setNumUnit(i);
+				System.out.println("--- units: " + i);
+				buf.append("--- units: " + i+"\r\n");
+				float result = newTestGames(p1, p2, (int)i, runs);
+				buf.append("AI GAME TEST RESULT: " + result+"\r\n");
+				System.out.println("AI GAME TEST RESULT: " + result);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
 	
 	private void newTest(Player p1, Player p2, int runs, int[] n) {
 		// Combat size
@@ -236,14 +260,14 @@ public class Test implements BWAPIEventListener  {
 		//unitsA.put(UnitTypes.Terran_SCV, n/2);
 		//unitsA.put(UnitTypes.Terran_Marine, 6);
 		//unitsA.put(UnitTypes.Terran_Goliath, n);
-		unitsA.put(UnitTypes.Protoss_Dragoon, 10);
-		unitsA.put(UnitTypes.Protoss_Zealot, 6);
+		unitsA.put(UnitTypes.Protoss_Dragoon, n);
+		//unitsA.put(UnitTypes.Protoss_Zealot, n);
 		//unitsA.put(UnitTypes.Terran_Ghost, 1);
 		//NEED TO CHANGE NUMBER OF UNITS AT WATCHER5
 		
 		HashMap<UnitTypes, Integer> unitsB = new HashMap<UnitType.UnitTypes, Integer>();
-		unitsB.put(UnitTypes.Protoss_Dragoon, 10);
-		unitsB.put(UnitTypes.Protoss_Zealot, 6);
+		unitsB.put(UnitTypes.Protoss_Dragoon, n);
+		//unitsB.put(UnitTypes.Protoss_Zealot, n/2);
 		//unitsB.put(UnitTypes.Terran_SCV, n/2);
 		//unitsB.put(UnitTypes.Terran_Marine, 6);
 		//unitsB.put(UnitTypes.Terran_Goliath, n);
@@ -276,6 +300,73 @@ public class Test implements BWAPIEventListener  {
 		
 	}
 	
+	//sth...test2 must be the same as the original function, except for their names
+	private void newEvoTest2(Player_Watcher5 p1, Player p2, int runs, int[] n) {
+		//THIS ONLY ALLOWS PLAYER1 TO BE EVO CONTROLLER
+		// Combat size
+		//int[] n = new int[]{8,16,32,50};
+		//runs is the number of runs
+		//n is the size of army
+		for(Integer i : n){
+			try {
+				p1.setNumUnit(i);
+				System.out.println("--- units: " + i);
+				buf.append("--- units: " + i+"\r\n");
+				float result = newTestGames2(p1, p2, (int)i, runs);
+				buf.append("AI GAME TEST RESULT: " + result+"\r\n");
+				System.out.println("AI GAME TEST RESULT: " + result);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	float newTestGames2(Player p1, Player p2, int n, int games) throws Exception{
+		//will create a game with dragoons and zealots.
+		
+		HashMap<UnitTypes, Integer> unitsA = new HashMap<UnitType.UnitTypes, Integer>();
+		//unitsA.put(UnitTypes.Terran_SCV, n/2);
+		//unitsA.put(UnitTypes.Terran_Marine, 6);
+		//unitsA.put(UnitTypes.Terran_Goliath, n);
+		unitsA.put(UnitTypes.Protoss_Dragoon, n/2);
+		unitsA.put(UnitTypes.Protoss_Zealot, n/2);
+		//unitsA.put(UnitTypes.Terran_Ghost, 1);
+		//NEED TO CHANGE NUMBER OF UNITS AT WATCHER5
+		
+		HashMap<UnitTypes, Integer> unitsB = new HashMap<UnitType.UnitTypes, Integer>();
+		unitsB.put(UnitTypes.Protoss_Dragoon, n/2);
+		unitsB.put(UnitTypes.Protoss_Zealot, n/2);
+		//unitsB.put(UnitTypes.Terran_SCV, n/2);
+		//unitsB.put(UnitTypes.Terran_Marine, 6);
+		//unitsB.put(UnitTypes.Terran_Goliath, n);
+		
+		Constants.Max_Units = n*2;
+		Constants.Max_Moves = Constants.Max_Units + Constants.Num_Directions + 1;
+		
+		//System.out.println("Dragoons: " + n/2 + "\tZealots: " + n/2 + " on each side");
+		buf.append("Units on each side: "+ n*3+ "\r\n");
+		List<Double> results = new ArrayList<Double>();
+		int wins = 0;
+		for(int i = 1; i <= games; i++){
+			double result = testGame(p1, p2, unitsA, unitsB); /////////////!!!!!!!!!!!!!!!!!!!
+			results.add(result);
+			if (result>0)
+				wins++;			
+			if(i%1==0){
+				//System.out.println("Score average: " + average(results) + "\tDeviation: " + deviation(results));
+				System.out.println("Games: "+i+" Win average: " + ((double)wins)/((double)i));
+				buf.append("Win average: " + ((double)wins)/((double)i)+"\r\n");
+			}
+		}
+		
+		// Calc deviation and average
+		System.out.println("--------------- Score average: " + average(results) + "\tDeviation: " + deviation(results));
+		buf.append("--------------- Score average: " + average(results) + "\tDeviation: " + deviation(results)+"\r\n");
+		System.out.println("--------------- Win average: " + ((double)wins)/((double)games));
+		buf.append("--------------- Win average: " + ((double)wins)/((double)games)+"\r\n");
+		return (float)wins / (float)games;
+		
+	}
 	
 	
 	private void PortfolioTest(Player p1, Player p2) throws Exception {
@@ -852,7 +943,7 @@ public class Test implements BWAPIEventListener  {
 	    // StateEvalScore has two components, a numerical score and a number of Movement actions performed by each player
 	    // with this evaluation, positive val means win, negative means loss, 0 means tie
 	    //System.out.println("Last game score: "+score._val);
-	    System.out.println("Player One score: "+score._val);
+	    System.out.println("P1 score: "+score._val);
 	    return score._val;
 	}
 	

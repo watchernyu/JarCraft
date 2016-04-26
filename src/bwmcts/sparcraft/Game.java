@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import bwmcts.sparcraft.players.Player;
+import bwmcts.sparcraft.players.Player_NoOverKillAttackValue;
 
 public class Game {
 
@@ -174,7 +175,10 @@ public class Game {
 		}
 	}
 
-	public double dnaEvalGroup(ArrayList<ArrayList<Integer>> DNA){
+	public double dnaEvalGroup(ArrayList<ArrayList<Integer>> DNA,int method){
+		//method, 0 = LTD2
+		//1 = playout
+		
 		//DNA as a sequence of scripts
 
 		ArrayList<UnitAction>scriptMoves_A = new ArrayList<UnitAction>();
@@ -239,10 +243,21 @@ public class Game {
 	    }
 	    
 	    GameState finalState = this.getState();
-	    StateEvalScore score = finalState.eval(Players.Player_One.ordinal(), EvaluationMethods.LTD2);
+	    int scoreval=0;
+	    if(method == 0){
+	    	StateEvalScore score = finalState.eval(Players.Player_One.ordinal(), EvaluationMethods.LTD2);
+	    	scoreval = score._val;
+	    }else{
+			GameState sc = finalState.clone(); // sc for state clone
+			Game gc = new Game(sc, new Player_NoOverKillAttackValue(Players.Player_One.ordinal()),
+					new Player_NoOverKillAttackValue(Players.Player_Two.ordinal()), 200, false);
+			gc.play();
+			scoreval = gc.getState().eval(Players.Player_One.ordinal(), EvaluationMethods.LTD2)._val;
+	    }
+	    
 	    // StateEvalScore has two components, a numerical score and a number of Movement actions performed by each player
 	    // with this evaluation, positive val means win, negative means loss, 0 means tie
-	    return score._val;
+	    return scoreval;
 	}	
 	
 	public double dnaEval(ArrayList<Integer> DNA){

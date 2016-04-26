@@ -72,7 +72,7 @@ public class Player_Watcher3 extends Player {
 		//mutation started
 		for(int i=0;i<100;i++){
 			this.mutate(DNA);
-			dnaScore = this.dnaEval(state, DNA);
+			//dnaScore = this.dnaEval(state, DNA);
 			if(dnaScore>dnaBestScore){
 				dnaBestScore = dnaScore;
 				for (int k=0;k<DNA.get(0).size();k++){
@@ -104,7 +104,7 @@ public class Player_Watcher3 extends Player {
 			}
 		}
 	}
-
+/*
 	public double dnaEval(GameState currentState, ArrayList<ArrayList<Integer>> DNA) {
 		// we can simply call this evaluation function on a DNA!!!!
 		// make life easier!!
@@ -113,7 +113,7 @@ public class Player_Watcher3 extends Player {
 				new Player_NoOverKillAttackValue(this.enemy), 200, false);
 		return gc.dnaEval(DNA);
 	}
-
+*/
 	public String toString() {
 		return "Watcher's first state-based alg";
 	}
