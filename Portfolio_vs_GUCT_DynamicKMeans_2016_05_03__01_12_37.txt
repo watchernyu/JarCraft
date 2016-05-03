@@ -1,0 +1,8 @@
+Player0: Portfolio Online Evolution with DNA population control
+Player1: GUCT_DynamicKMeans - hpMulitplier: 1.0	clusters: 6	K: 1.600000023841858	maxChildren: 20	maxPlayerIndex: 1	debug: false	simulationSteps: 2147483647	nokModelling: true	LTD2: true
+--- units: 8
+Units on each side: 24
+--- units: 8
+Units on each side: 24
+--- units: 16
+Units on each side: 48

@@ -175,7 +175,7 @@ public class Game {
 		}
 	}
 
-	public double dnaEvalGroup(ArrayList<ArrayList<Integer>> DNA,int method){
+	public int dnaEvalGroup(ArrayList<ArrayList<Integer>> DNA,int method){
 		//method, 0 = LTD2
 		//1 = playout
 		
@@ -250,7 +250,7 @@ public class Game {
 	    }else{
 			GameState sc = finalState.clone(); // sc for state clone
 			Game gc = new Game(sc, new Player_NoOverKillAttackValue(Players.Player_One.ordinal()),
-					new Player_NoOverKillAttackValue(Players.Player_Two.ordinal()), 200, false);
+					new Player_NoOverKillAttackValue(Players.Player_Two.ordinal()), 15, false);
 			gc.play();
 			scoreval = gc.getState().eval(Players.Player_One.ordinal(), EvaluationMethods.LTD2)._val;
 	    }
