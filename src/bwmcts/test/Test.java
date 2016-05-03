@@ -27,6 +27,8 @@ import bwmcts.uct.flatguctcd.FlatGUCTCD;
 import bwmcts.uct.guctcd.ClusteringConfig;
 import bwmcts.uct.guctcd.GUCTCD;
 import bwmcts.uct.iuctcd.IUCTCD;
+import bwmcts.uct.portfolio.UCTPortfolio_1;
+import bwmcts.uct.portfolio.UCTPortfolio_2;
 import bwmcts.uct.rguctcd.RGUCTCD;
 import bwmcts.uct.uctcd.UCTCD;
 import bwmcts.sparcraft.*;
@@ -34,7 +36,7 @@ import bwmcts.sparcraft.players.*;
 
 public class Test implements BWAPIEventListener  {
 	
-	private static boolean graphics = true;
+	private static boolean graphics = false;
 	
 	JNIBWAPI bwapi;
 	
@@ -120,7 +122,8 @@ public class Test implements BWAPIEventListener  {
 		//p2 = new Player_NoOverKillAttackValue(1);
 		//p2 = new UctLogic(tc.bwapi, new UCTCD(new UctConfig(1)),40);
 		//Player p2 = new RandomScriptLogic(1);
-		p2 = new UctLogic(tc.bwapi, guctcdB, 40);
+		// p2 = new UctLogic(tc.bwapi, guctcdB, 40);
+		p2 = new UctLogic(tc.bwapi, new UCTPortfolio_2(new UctConfig(1)), 40);
 		
 		tc.buf=new StringBuffer();
 		System.out.println("Player0: "+p1.toString());
@@ -128,9 +131,9 @@ public class Test implements BWAPIEventListener  {
 		tc.buf.append("Player0: "+p1.toString()+"\r\n");
 		tc.buf.append("Player1: "+p2.toString()+"\r\n");
 		
-		//tc.newTest(p1, p2, 100, new int[]{4,8,16});
+		// tc.newTest(p1, p2, 100, new int[]{4,8,16});
 		//tc.newEvoTest(p1, p2, 100, new int[]{8,8,16});
-		tc.newEvoTest2(p1, p2, 100, new int[]{16,8,16});
+		tc.newEvoTest2(p1, p2, 100, new int[]{8,8,16});
 		//tc.dragoonZTest(p1, p2, 10, new int[]{8,32,80,112,144});
 		
 		try {
