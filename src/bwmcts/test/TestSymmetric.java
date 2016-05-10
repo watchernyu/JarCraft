@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
 import javabot.BWAPIEventListener;
 import javabot.JNIBWAPI;
@@ -28,14 +29,16 @@ import bwmcts.uct.guctcd.ClusteringConfig;
 import bwmcts.uct.guctcd.GUCTCD;
 import bwmcts.uct.iuctcd.IUCTCD;
 import bwmcts.uct.portfolio.UCTPortfolio_2;
+//import bwmcts.uct.portfolio.UCTPortfolio_1;
+//import bwmcts.uct.portfolio.UCTPortfolio_2;
 import bwmcts.uct.rguctcd.RGUCTCD;
 import bwmcts.uct.uctcd.UCTCD;
 import bwmcts.sparcraft.*;
 import bwmcts.sparcraft.players.*;
 
-public class Test implements BWAPIEventListener  {
+public class TestSymmetric implements BWAPIEventListener  {
 	
-	private static boolean graphics = true;
+	private static boolean graphics = false;
 	
 	JNIBWAPI bwapi;
 	
@@ -63,10 +66,9 @@ public class Test implements BWAPIEventListener  {
 		System.out.println(DNA);
 	}
 	
-	
 	public static void main(String[] args) throws Exception{
 		System.out.println("Create TC instance");
-		Test tc=new Test();
+		TestSymmetric tc=new TestSymmetric();
 		//tc.bwapi=new JNIBWAPI(tc);
 		//tc.bwapi.start();
 		
@@ -99,12 +101,13 @@ public class Test implements BWAPIEventListener  {
 		FlatGUCTCD flatGuctcdB = new FlatGUCTCD(new UctConfig(1, true), 
 				new ClusteringConfig(1, 6, new DynamicKMeans(30.0)));
 
-		Player_Watcher6 p1;
+		Player p1;
 		//Player p1;
-		p1 = new Player_Watcher6(0);
+		//p1 = new Player_Watcher6(0);
+		
 		//p1 = new Player_AttackAndMove(0);
 		//p1 = new Player_Kite(0);
-		//p1 = new Player_Watcher(0);
+		p1 = new Player_Watcher6(0);
 		//p1 = new Player_NoOverKillAttackValue(0);
 		//Player p1 = new Player_NoOverKillAttackValue(0);
 		//p1 = new UctLogic(tc.bwapi, guctcdA, 40);
@@ -115,13 +118,14 @@ public class Test implements BWAPIEventListener  {
 		//Player p2 = new Player_Random(1);
 		//Player p2 = new Player_Nothing(1);
 		Player p2;
-		//p2=new Player_Random(1);
-		//p2 = new Player_AttackClosest(1);
-		//p2 = new Player_Kite(1);
 		//p2 = new Player_NoOverKillAttackValue(1);
+		//p2=new Player_Random(1);
+		//p2 = new Player_pg(1);
+		//p2 = new Player_Kite(1);
+		//p2 = new Player_Watcher6(1);
 		//p2 = new UctLogic(tc.bwapi, new UCTCD(new UctConfig(1)),40);
 		//Player p2 = new RandomScriptLogic(1);
-		// p2 = new UctLogic(tc.bwapi, guctcdB, 40);
+		//p2 = new UctLogic(tc.bwapi, guctcdB, 40);
 		p2 = new UctLogic(tc.bwapi, new UCTPortfolio_2(new UctConfig(1)), 40);
 		
 		tc.buf=new StringBuffer();
@@ -130,9 +134,9 @@ public class Test implements BWAPIEventListener  {
 		tc.buf.append("Player0: "+p1.toString()+"\r\n");
 		tc.buf.append("Player1: "+p2.toString()+"\r\n");
 		
-		// tc.newTest(p1, p2, 100, new int[]{4,8,16});
+		tc.newTest(p1, p2, 300, new int[]{16,16,32});
 		//tc.newEvoTest(p1, p2, 100, new int[]{8,8,16});
-		tc.newEvoTest2(p1, p2, 100, new int[]{16,8,16});
+		//tc.newEvoTest2(p1, p2, 100, new int[]{16,8,16});
 		//tc.dragoonZTest(p1, p2, 10, new int[]{8,32,80,112,144});
 		
 		try {
@@ -246,6 +250,14 @@ public class Test implements BWAPIEventListener  {
 			try {
 				System.out.println("--- units: " + i);
 				buf.append("--- units: " + i+"\r\n");
+				if(p1 instanceof Player_Watcher6){
+					Player_Watcher6 pw = (Player_Watcher6) p1;
+					pw.setNumUnit(i);
+				}
+				if(p2 instanceof Player_Watcher6){
+					Player_Watcher6 pw = (Player_Watcher6) p2;
+					pw.setNumUnit(i);
+				}
 				float result = newTestGames(p1, p2, (int)i, runs);
 				buf.append("AI GAME TEST RESULT: " + result+"\r\n");
 				System.out.println("AI GAME TEST RESULT: " + result);
@@ -348,7 +360,7 @@ public class Test implements BWAPIEventListener  {
 		
 		HashMap<UnitTypes, Integer> unitsA = new HashMap<UnitType.UnitTypes, Integer>();
 		//unitsA.put(UnitTypes.Terran_SCV, n/2);
-		//unitsA.put(UnitTypes.Terran_Marine, n/2);
+		//unitsA.put(UnitTypes.Terran_Marine, 6);
 		//unitsA.put(UnitTypes.Terran_Goliath, n);
 		unitsA.put(UnitTypes.Protoss_Dragoon, n);
 		//unitsA.put(UnitTypes.Protoss_Zealot, n/2);
@@ -359,7 +371,7 @@ public class Test implements BWAPIEventListener  {
 		unitsB.put(UnitTypes.Protoss_Dragoon, n);
 		//unitsB.put(UnitTypes.Protoss_Zealot, n/2);
 		//unitsB.put(UnitTypes.Terran_SCV, n/2);
-		//unitsB.put(UnitTypes.Terran_Marine, n/2);
+		//unitsB.put(UnitTypes.Terran_Marine, 6);
 		//unitsB.put(UnitTypes.Terran_Goliath, n);
 		
 		Constants.Max_Units = n*2;
@@ -935,9 +947,9 @@ public class Test implements BWAPIEventListener  {
 	
 	int testGame(Player p1, Player p2, HashMap<UnitTypes, Integer> unitsA, HashMap<UnitTypes, Integer> unitsB) throws Exception
 	{
-		GameState initialState = gameState(unitsA, unitsB);
-		
-		shufflePositions(initialState, 100);
+		GameState initialState = gameStateSymmetric(unitsA, unitsB);
+		//LOCATOR
+		//shufflePositions(initialState, 100);
 		
 		p1.setID(0);
 		p2.setID(1);
@@ -1017,7 +1029,6 @@ public class Test implements BWAPIEventListener  {
 	    int unitsPerLine = 16;
 	    
 	    for(UnitTypes type : unitsA.keySet()){
-	    	
 	    	try {
 	    	    state.addUnit(bwapi.getUnitType(type.ordinal()), Players.Player_One.ordinal(),new Position(startXA, startY + space));
 	    	} catch (Exception e){}
@@ -1031,13 +1042,9 @@ public class Test implements BWAPIEventListener  {
  		 	    	//e.printStackTrace();
  		 	    }
  	    	}
-	 	    
 	    	startXA -= space * 2;
-	    	
 	    }
-	    
 	    for(UnitTypes type : unitsB.keySet()){
-	    	
 	    	try {
 	    	    state.addUnit(bwapi.getUnitType(type.ordinal()), Players.Player_Two.ordinal(),new Position(startXB, startY + space));
 	    	} catch (Exception e){}
@@ -1051,13 +1058,41 @@ public class Test implements BWAPIEventListener  {
 		 	    	//e.printStackTrace();
 		 	    }
  	    	}
-	 	    
 	    	startXB += space * 2;
-	    	
 	    }
-	 	
 	    return state;
 	}
+	
+	
+	private GameState gameStateSymmetric(HashMap<UnitTypes, Integer> unitsA,
+			HashMap<UnitTypes, Integer> unitsB) throws Exception {
+		//LOCATOR
+		// GameState only has a default constructor, you must add units to it manually
+	    GameState state=new GameState();
+	    state.setMap(new Map(25, 20));
+	    
+	    int startXA = 275;
+	    int startXB = 575;
+	    int space = 30;
+	    int startY = 30;
+	    int unitsPerLine = 16;
+	    
+	    Random ran = new Random();
+	    
+	    for(UnitTypes type : unitsA.keySet()){
+ 	    	for(int i = 0; i < unitsA.get(type); i++){
+ 	    		int x = startXA;
+ 	    		int y = startY;
+ 	    		try {
+ 	    			state.addUnit(bwapi.getUnitType(type.ordinal()), Players.Player_One.ordinal(), new Position(50, 50+i*24));
+ 	    			state.addUnit(bwapi.getUnitType(type.ordinal()), Players.Player_Two.ordinal(), new Position(400, 50+i*24));
+ 	    		} catch (Exception e){
+ 		 	    	//e.printStackTrace();
+ 		 	    }
+ 	    	}
+	    }
+	    return state;
+	}	
 
 	private double deviation(List<Double> times) {
 		double average = average(times);

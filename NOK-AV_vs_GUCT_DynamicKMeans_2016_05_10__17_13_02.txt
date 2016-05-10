@@ -1,0 +1,8 @@
+Player0: NOK-AV
+Player1: GUCT_DynamicKMeans - hpMulitplier: 1.0	clusters: 6	K: 1.600000023841858	maxChildren: 20	maxPlayerIndex: 1	debug: false	simulationSteps: 2147483647	nokModelling: true	LTD2: true
+--- units: 32
+Units on each side: 96
+--- units: 24
+Units on each side: 72
+--- units: 32
+Units on each side: 96

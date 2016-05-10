@@ -34,6 +34,8 @@ public class Player_Watcher6 extends Player {
 	ArrayList<Player> scripts;
 	int numOfUnits=0;
 	int EVALUTIONMETHOD = 1;//0 means LTD2, 1 means playout
+	int futureSteps = 4;
+	int numOfMutations = 7;
 
 	public Player_Watcher6(int playerID) {
 		_id = playerID;
@@ -43,6 +45,7 @@ public class Player_Watcher6 extends Player {
 		
 		//initialize script players
 		scripts = new ArrayList<Player>();
+		
 		scripts.add(new Player_NoOverKillAttackValue(playerID));
 		scripts.add(new Player_NOKAVForward(playerID));
 		scripts.add(new Player_NOKAVBack(playerID));
@@ -54,6 +57,8 @@ public class Player_Watcher6 extends Player {
 		//scripts.add(new Player_AttackAndMove(playerID));
 		//scripts.add(new Player_AttackWeakest(playerID));
 		
+		//scripts.add(new Player_AttackClosest(playerID));
+		
 		///////ADD A SCRITP TO WALK FORWARD TO THE ENEMY WEAKEST UNIT....
 		
 		//scripts.add(new Player_Retreat(playerID));
@@ -64,20 +69,32 @@ public class Player_Watcher6 extends Player {
 		//currently only support playerID = 0;
 	}
 
+	public void setToTestOnly(){
+		futureSteps = 1;
+		numOfMutations = 1;
+	}
+	
 	public void getMoves(GameState state, HashMap<Integer, List<UnitAction>> moves, List<UnitAction> moveVec) {
 		moveVec.clear();
 		List<UnitAction> actions;
 		int bestMoveIndex = 0;
 		UnitAction move;
-		int futureSteps = 4;
-		int numOfMutations = 10;
+
 		int numOfScripts = scripts.size();
 		//DNA initialization
 		//fix here: we need to add the sense of population.
 		
 		Population P = new Population(this,state,futureSteps,numOfScripts,numOfUnits,scripts);
 		P.initialize();
-		P.evolve(9);
+		long startTime = System.currentTimeMillis();
+		long timeLimit = 40;
+		for(int e=0;e<numOfMutations;e++){
+			if(System.currentTimeMillis()-startTime>timeLimit){
+				break;
+			}
+			P.evolve(1);
+		}
+		//System.out.println("Time used: "+ (System.currentTimeMillis()-startTime));
 		
 		ArrayList<Integer> bestDnaPiece = P.bestDna().get(0);
 		if(showBestDna){

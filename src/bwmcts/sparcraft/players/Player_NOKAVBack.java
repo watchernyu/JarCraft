@@ -163,6 +163,6 @@ public class Player_NOKAVBack extends Player {
 	}
 	
 	public String toString(){
-		return "NOK-AV";
+		return "NOK-AV-Back";
 	}
 }

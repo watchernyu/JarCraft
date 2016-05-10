@@ -27,15 +27,16 @@ import bwmcts.uct.flatguctcd.FlatGUCTCD;
 import bwmcts.uct.guctcd.ClusteringConfig;
 import bwmcts.uct.guctcd.GUCTCD;
 import bwmcts.uct.iuctcd.IUCTCD;
-import bwmcts.uct.portfolio.UCTPortfolio_2;
+//import bwmcts.uct.portfolio.UCTPortfolio_1;
+//import bwmcts.uct.portfolio.UCTPortfolio_2;
 import bwmcts.uct.rguctcd.RGUCTCD;
 import bwmcts.uct.uctcd.UCTCD;
 import bwmcts.sparcraft.*;
 import bwmcts.sparcraft.players.*;
 
-public class Test implements BWAPIEventListener  {
+public class Test2 implements BWAPIEventListener  {
 	
-	private static boolean graphics = true;
+	private static boolean graphics = false;
 	
 	JNIBWAPI bwapi;
 	
@@ -63,10 +64,9 @@ public class Test implements BWAPIEventListener  {
 		System.out.println(DNA);
 	}
 	
-	
 	public static void main(String[] args) throws Exception{
 		System.out.println("Create TC instance");
-		Test tc=new Test();
+		Test2 tc=new Test2();
 		//tc.bwapi=new JNIBWAPI(tc);
 		//tc.bwapi.start();
 		
@@ -102,6 +102,7 @@ public class Test implements BWAPIEventListener  {
 		Player_Watcher6 p1;
 		//Player p1;
 		p1 = new Player_Watcher6(0);
+		
 		//p1 = new Player_AttackAndMove(0);
 		//p1 = new Player_Kite(0);
 		//p1 = new Player_Watcher(0);
@@ -116,13 +117,13 @@ public class Test implements BWAPIEventListener  {
 		//Player p2 = new Player_Nothing(1);
 		Player p2;
 		//p2=new Player_Random(1);
-		//p2 = new Player_AttackClosest(1);
+		//p2 = new Player_pg(1);
 		//p2 = new Player_Kite(1);
 		//p2 = new Player_NoOverKillAttackValue(1);
 		//p2 = new UctLogic(tc.bwapi, new UCTCD(new UctConfig(1)),40);
 		//Player p2 = new RandomScriptLogic(1);
-		// p2 = new UctLogic(tc.bwapi, guctcdB, 40);
-		p2 = new UctLogic(tc.bwapi, new UCTPortfolio_2(new UctConfig(1)), 40);
+		p2 = new UctLogic(tc.bwapi, guctcdB, 40);
+		//p2 = new UctLogic(tc.bwapi, new UCTPortfolio_2(new UctConfig(1)), 40);
 		
 		tc.buf=new StringBuffer();
 		System.out.println("Player0: "+p1.toString());
@@ -348,7 +349,7 @@ public class Test implements BWAPIEventListener  {
 		
 		HashMap<UnitTypes, Integer> unitsA = new HashMap<UnitType.UnitTypes, Integer>();
 		//unitsA.put(UnitTypes.Terran_SCV, n/2);
-		//unitsA.put(UnitTypes.Terran_Marine, n/2);
+		//unitsA.put(UnitTypes.Terran_Marine, 6);
 		//unitsA.put(UnitTypes.Terran_Goliath, n);
 		unitsA.put(UnitTypes.Protoss_Dragoon, n);
 		//unitsA.put(UnitTypes.Protoss_Zealot, n/2);
@@ -359,7 +360,7 @@ public class Test implements BWAPIEventListener  {
 		unitsB.put(UnitTypes.Protoss_Dragoon, n);
 		//unitsB.put(UnitTypes.Protoss_Zealot, n/2);
 		//unitsB.put(UnitTypes.Terran_SCV, n/2);
-		//unitsB.put(UnitTypes.Terran_Marine, n/2);
+		//unitsB.put(UnitTypes.Terran_Marine, 6);
 		//unitsB.put(UnitTypes.Terran_Goliath, n);
 		
 		Constants.Max_Units = n*2;

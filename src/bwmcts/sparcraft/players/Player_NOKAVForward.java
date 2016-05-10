@@ -156,6 +156,6 @@ public class Player_NOKAVForward extends Player {
 	}
 	
 	public String toString(){
-		return "NOK-AV";
+		return "NOK-AV-Forward";
 	}
 }
