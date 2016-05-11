@@ -42,16 +42,20 @@ public class Player_pg extends Player {
 		ourScripts= new ArrayList<Player>();
 		enemyScripts= new ArrayList<Player>();
 		
-		//portfolio.add(new Player_NoOverKillAttackValue(playerID));
 		portfolio.add(new Player_NoOverKillAttackValue(playerID));
-		portfolio.add(new Player_KiteDPS(playerID));
+		portfolio.add(new Player_NOKAVMicroRight(playerID));
+		portfolio.add(new Player_NOKAVMicroLeft(playerID));
+		portfolio.add(new Player_NOKAVMicroUp(playerID));
+		portfolio.add(new Player_NOKAVMicroDown(playerID));
+		
+		//portfolio.add(new Player_KiteDPS(playerID));
 		//portfolio.add(new Player_NOKAVForward(playerID));
 		//portfolio.add(new Player_NOKAVBack(playerID));
 		//portfolio.add(new Player_NOKAVForwardFar(playerID));
 		//portfolio.add(new Player_NOKAVBackClose(playerID));
 		//portfolio.add(new Player_NOKAVBackFar(playerID));
 		
-		setting3();
+		setting1();
 	}
 
 	public void setting1(){

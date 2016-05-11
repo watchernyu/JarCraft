@@ -24,7 +24,7 @@ import genetic.Population;
 
 import java.util.Random;
 
-public class Player_Watcher6 extends Player {
+public class Player_Watcher7 extends Player {
 	boolean showBestDna = false;
 	boolean allowInitRandomMutation = false;
 	
@@ -33,11 +33,15 @@ public class Player_Watcher6 extends Player {
 	Random ran;
 	ArrayList<Player> scripts;
 	int numOfUnits=0;
+	long timeLimit = 40;
 	int EVALUTIONMETHOD = 1;//0 means LTD2, 1 means playout
-	int futureSteps = 4;
-	int numOfMutations = 7;
+	int futureSteps = 3;
+	int numOfMutations = 10;
+	Population P;
+	boolean firstTimeInit;
 
-	public Player_Watcher6(int playerID) {
+	public Player_Watcher7(int playerID) {
+		firstTimeInit=true;
 		_id = playerID;
 		setID(playerID);
 		enemy = GameState.getEnemy(_id);
@@ -45,11 +49,9 @@ public class Player_Watcher6 extends Player {
 		
 		//initialize script players
 		scripts = new ArrayList<Player>();
-		
-		
 		scripts.add(new Player_NoOverKillAttackValue(playerID));
-		scripts.add(new Player_NOKAVForward(playerID));
 		scripts.add(new Player_NOKAVBack(playerID));
+		scripts.add(new Player_NOKAVForward(playerID));
 		scripts.add(new Player_NOKAVForwardFar(playerID));
 		scripts.add(new Player_NOKAVBackClose(playerID));
 		scripts.add(new Player_NOKAVBackFar(playerID));
@@ -81,14 +83,21 @@ public class Player_Watcher6 extends Player {
 		int bestMoveIndex = 0;
 		UnitAction move;
 
+		//System.out.println(moves.size());
+		
+		long startTime = System.currentTimeMillis();
 		int numOfScripts = scripts.size();
 		//DNA initialization
 		//fix here: we need to add the sense of population.
 		
-		Population P = new Population(this,state,futureSteps,numOfScripts,numOfUnits,scripts);
-		P.initialize();
-		long startTime = System.currentTimeMillis();
-		long timeLimit = 40;
+		if(firstTimeInit){
+			P = new Population(this,state,futureSteps,numOfScripts,numOfUnits,scripts);
+			P.initialize();
+			firstTimeInit = false;
+		}
+		
+		P.reinitialize(state);
+
 		for(int e=0;e<numOfMutations;e++){
 			if(System.currentTimeMillis()-startTime>timeLimit){
 				break;
@@ -115,22 +124,6 @@ public class Player_Watcher6 extends Player {
 			scriptToUse.getMoves(state, oneUnitMap, moveVec);
 		}
 	}
-	
-	/*
-	public void mutateZeroOneGroup(ArrayList<ArrayList<Integer>> DNA) {
-		// helper function to mutate a DNA, according to some rate.
-		Double rate = 0.3;
-		for(int i=0;i<DNA.size();i++){
-			for(int j=0;j<DNA.get(0).size();j++){
-				Double mut = ran.nextDouble();
-				ArrayList<Integer> gene = DNA.get(i);
-				if (mut < rate) {
-					int newGene = ran.nextInt(2); //only give 0 or 1 so only NOKAV or retreat
-					gene.set(j, newGene);
-				}
-			}
-		}
-	}*/
 
 	public void setNumUnit(int n){
 		this.numOfUnits = n;

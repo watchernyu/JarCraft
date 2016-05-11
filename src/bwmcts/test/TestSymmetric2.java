@@ -102,25 +102,27 @@ public class TestSymmetric2 implements BWAPIEventListener  {
 				new ClusteringConfig(1, 6, new DynamicKMeans(30.0)));
 
 		Player p1;
-		p1 = new Player_Watcher6(0);
+		p1 = new Player_Watcher7(0);
+		//p1 = new Player_KiteDPS(0);
+		//p1 = new Player_TestOnly(0);
 		//p1 = new Player_NoOverKillAttackValue(0);
-		//Player p1 = new Player_NoOverKillAttackValue(0);
 		//p1 = new UctLogic(tc.bwapi, guctcdA, 40);
 		//Player p1 = new Player_AttackClosest2(0);
 		//Player p1 = new Player_Defense(0);
 		//Player p1 = new Player_ClusteredUnitStateToUnitAction(0);
 		//Player p1 = new UctLogic(tc.bwapi, new IUCTCD(new UctConfig(0)),40);
-		//Player p2 = new Player_Random(1);
+		//ayer p2 = new Player_Random(1);
 		//Player p2 = new Player_Nothing(1);
 		Player p2;
-		p2 = new Player_NoOverKillAttackValue(1);
+		//p2 = new Player_NoOverKillAttackValue(1);
 		//p2=new Player_Random(1);
 		//p2 = new Player_pg(1);
 		//p2 = new Player_Kite(1);
 		//p2 = new Player_Watcher6(1);
 		//p2 = new UctLogic(tc.bwapi, new UCTCD(new UctConfig(1)),40);
 		//Player p2 = new RandomScriptLogic(1);
-		//p2 = new UctLogic(tc.bwapi, guctcdB, 40);
+		p2 = new UctLogic(tc.bwapi, guctcdB, 40);
+		//p2 = new UctLogic(tc.bwapi, rguctcdB, 40);
 		//p2 = new UctLogic(tc.bwapi, new UCTPortfolio_2(new UctConfig(1)), 40);
 		
 		tc.buf=new StringBuffer();
@@ -168,6 +170,14 @@ public class TestSymmetric2 implements BWAPIEventListener  {
 					Player_Watcher6 pw = (Player_Watcher6) p2;
 					pw.setNumUnit(i);
 				}
+				if(p1 instanceof Player_Watcher7){
+					Player_Watcher7 pw = (Player_Watcher7) p1;
+					pw.setNumUnit(i);
+				}
+				if(p2 instanceof Player_Watcher7){
+					Player_Watcher7 pw = (Player_Watcher7) p2;
+					pw.setNumUnit(i);
+				}
 				float result = newTestGames(p1, p2, (int)i, runs);
 				buf.append("AI GAME TEST RESULT: " + result+"\r\n");
 				System.out.println("AI GAME TEST RESULT: " + result);
@@ -181,17 +191,19 @@ public class TestSymmetric2 implements BWAPIEventListener  {
 		
 		HashMap<UnitTypes, Integer> unitsA = new HashMap<UnitType.UnitTypes, Integer>();
 		//unitsA.put(UnitTypes.Terran_SCV, n/2);
-		//unitsA.put(UnitTypes.Terran_Marine, 6);
+		unitsA.put(UnitTypes.Terran_Marine, n);
+		//unitsA.put(UnitTypes.Zerg_Zergling, n/2);
 		//unitsA.put(UnitTypes.Terran_Goliath, n);
-		unitsA.put(UnitTypes.Protoss_Dragoon, n);
-		//unitsA.put(UnitTypes.Protoss_Zealot, n);
+		//unitsA.put(UnitTypes.Protoss_Dragoon, n/2-2);
+		//unitsA.put(UnitTypes.Protoss_Zealot, n/4);
 		//unitsA.put(UnitTypes.Terran_Ghost, 1);
 		
 		HashMap<UnitTypes, Integer> unitsB = new HashMap<UnitType.UnitTypes, Integer>();
-		unitsB.put(UnitTypes.Protoss_Dragoon, n);
-		//unitsB.put(UnitTypes.Protoss_Zealot, n/2);
+		//unitsB.put(UnitTypes.Protoss_Dragoon, n/2-2);
+		unitsB.put(UnitTypes.Protoss_Zealot, n/2);
 		//unitsB.put(UnitTypes.Terran_SCV, n/2);
-		//unitsB.put(UnitTypes.Terran_Marine, 6);
+		//unitsB.put(UnitTypes.Terran_Marine, n/2);
+		//unitsB.put(UnitTypes.Zerg_Zergling, n);
 		//unitsB.put(UnitTypes.Terran_Goliath, n);
 		
 		Constants.Max_Units = n*2;
@@ -305,7 +317,7 @@ public class TestSymmetric2 implements BWAPIEventListener  {
 	    state.setMap(new Map(25, 20));
 	    
 	    int startXA = 275;
-	    int startXB = 575;
+	    int startXB = 500;
 	    int space = 28;
 	    int startY = 50;
 	    int unitsPerLine = 16;

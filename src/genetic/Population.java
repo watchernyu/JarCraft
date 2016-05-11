@@ -13,7 +13,7 @@ public class Population {
 	public boolean showEvolutionProcess = false;
 	public double mutateRate = 0.2;
 	public int numMutateEachSuperior = 2;
-	
+	public int numOfBest = 3;
 	public int generation;
 	public int bestscore;
 	//public ArrayList<ArrayList<ArrayList<Integer>>> DNAs;
@@ -24,10 +24,15 @@ public class Population {
 	public int numOfScripts;
 	public int numOfBeasts;
 	public int numOfUnits;
+
+	private int evalGameRoundLimit = 20;
 	private Random ran;
 	private GameState state; //THIS WILL NOT BE UPDATED SO EACH TIME IN GETMOVES() 
 	private ArrayList<Player> scripts;
 	private Player player;
+	
+	private Player playerForEval1;
+	private Player playerForEval2;
 
 	//NEED TO CREATE A NEW POPULATION
 	public Population(Player player,GameState state,int futureSteps, int numOfScripts,int numOfUnits,ArrayList<Player> scripts) {
@@ -40,10 +45,23 @@ public class Population {
 		this.scripts = scripts;
 		this.player = player;
 		this.beasts = new ArrayList<Beast>();
+		
+		playerForEval1 = new Player_NoOverKillAttackValue(0);
+		playerForEval2 = new Player_NoOverKillAttackValue(1);
 	}
-
-	public void initialize(){
-		for(int p=0;p<3;p++){
+	
+	public void reinitialize(GameState s){
+		this.state = s;
+		beasts.clear();
+		initialize();
+		
+		/*
+		//long st = System.currentTimeMillis();//##
+		for(int p=0;p<numOfBest;p++){//refresh the score..
+			beasts.get(p).score = evalDna(state,beasts.get(p).getDna());
+		}
+		
+		for(int p=0;p<1;p++){
 			ArrayList<ArrayList<Integer>> DNA = new ArrayList<ArrayList<Integer>>();
 			for(int k=0;k<futureSteps;k++){
 				DNA.add(new ArrayList<Integer>());
@@ -54,18 +72,40 @@ public class Population {
 			int score = evalDna(state,DNA);
 			beasts.add(new Beast(DNA,score));
 		}
-		for(int p=0;p<2;p++){
+		select();
+		//System.out.println("time used: "+(System.currentTimeMillis()-st));
+		 * 
+		 */
+	}
+
+	public void initialize(){
+		//long st = System.currentTimeMillis();//##
+		int basicScore = 0;
+		for(int p=0;p<1;p++){
 			ArrayList<ArrayList<Integer>> DNA = new ArrayList<ArrayList<Integer>>();
 			for(int k=0;k<futureSteps;k++){
 				DNA.add(new ArrayList<Integer>());
 				for(int i=0;i<numOfUnits;i++){
-					DNA.get(k).add(ran.nextInt(scripts.size())); //for now, all start with pure NOKAV scripts.
+					DNA.get(k).add(0); //for now, all start with pure NOKAV scripts.
 				}
 			}
 			int score = evalDna(state,DNA);
+			basicScore=score;
 			beasts.add(new Beast(DNA,score));
 		}
+		
+		for(int p=0;p<numOfBest-1;p++){
+			ArrayList<ArrayList<Integer>> DNA = new ArrayList<ArrayList<Integer>>();
+			for(int k=0;k<futureSteps;k++){
+				DNA.add(new ArrayList<Integer>());
+				for(int i=0;i<numOfUnits;i++){
+					DNA.get(k).add(0); //for now, all start with pure NOKAV scripts.
+				}
+			}
+			beasts.add(new Beast(DNA,basicScore));
+		}
 		select();
+		//System.out.println("time used: "+(System.currentTimeMillis()-st));
 	}
 	
 	public void evolve(int rounds){//continue evolving for a certain rounds
@@ -81,18 +121,19 @@ public class Population {
 	
 	public void printHighScore(){
 		System.out.println("Current high scores in population: ");
-		for (int i=0;i<5;i++){
+		for (int i=0;i<4;i++){
 			System.out.print(beasts.get(i).score+" ");
 		}
 		System.out.println();
 	}
 	
 	public void select(){//basically discard all the beasts that are less valuable..
+		//long st = System.currentTimeMillis();
 		Collections.sort(beasts);
 		generation ++;
 
 		ArrayList<Beast> tempbeasts = new ArrayList<Beast>();
-		for (int i=0;i<5;i++){
+		for (int i=0;i<numOfBest;i++){
 			tempbeasts.add(beasts.get(i));
 		}
 		beasts.clear();
@@ -101,6 +142,7 @@ public class Population {
 			System.out.println("Generation: "+generation);//only for testing
 			showBeasts();//only for testing
 		}
+		//System.out.println("Select time used: "+(System.currentTimeMillis()-st));
 	}
 	
 	public void showBeasts(){//will display the all the beasts in population, along with their scores.
@@ -111,7 +153,8 @@ public class Population {
 	}
 	
 	public void mutateAll(){
-		for(int index =0;index<4;index++){//the best 5 dnas are used to mutate
+		//long st = System.currentTimeMillis();
+		for(int index =0;index<numOfBest;index++){//the best 5 dnas are used to mutate
 			ArrayList<ArrayList<Integer>> currentDna = beasts.get(index).getDna();
 			for(int m=0;m<numMutateEachSuperior;m++){//each superior DNA will be mutated 4 times
 				ArrayList<ArrayList<Integer>> newDna = mutateDna(currentDna);
@@ -119,6 +162,7 @@ public class Population {
 				beasts.add(new Beast(newDna,score));
 			}
 		}
+		//System.out.println("time used: "+(System.currentTimeMillis()-st));
 	}
 	
 	public ArrayList<ArrayList<Integer>> mutateDna(ArrayList<ArrayList<Integer>> DNA) {
@@ -144,11 +188,11 @@ public class Population {
 	
 	public int evalDna(GameState currentState,ArrayList<ArrayList<Integer>> DNA){
 		GameState sc = currentState.clone(); // sc for state clone
-		Game gc = new Game(sc, new Player_NoOverKillAttackValue(0),
-				new Player_NoOverKillAttackValue(1), 200, false, scripts); //send scripts to game...
-		return gc.dnaEvalGroup(DNA,1);//HARDCODE EVALUATION METHOD TO 1
+		Game gc = new Game(sc, playerForEval1,
+				playerForEval2, evalGameRoundLimit, false, scripts); //send scripts to game...
+		//long st = System.currentTimeMillis();
+		int ss = gc.dnaEvalGroup(DNA,1);
+		//System.out.println("time used: "+(System.currentTimeMillis()-st));
+		return ss; //HARDCODE EVALUATION METHOD TO 1
 	}
-	
-	
-
 }
