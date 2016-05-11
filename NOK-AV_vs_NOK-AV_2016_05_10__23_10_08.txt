@@ -1,0 +1,82 @@
+Player0: NOK-AV
+Player1: NOK-AV
+
+########## NEW GAME ##########  All Dragoon: 4
+--------------- Score average: 111.72	Deviation: 135.64723218702272
+--------------- Win average: 0.7525
+
+########## NEW GAME ##########  All Dragoon: 16
+--------------- Score average: 33.57	Deviation: 110.0553501652691
+--------------- Win average: 0.6175
+
+########## NEW GAME ##########  All Dragoon: 32
+--------------- Score average: 17.6725	Deviation: 84.52561886049693
+--------------- Win average: 0.56
+
+########## NEW GAME ##########  All Dragoon: 48
+--------------- Score average: 16.6925	Deviation: 79.15774089594778
+--------------- Win average: 0.6075
+
+########## NEW GAME ##########  All Zergling: 4
+--------------- Score average: 87.7275	Deviation: 178.84585050749723
+--------------- Win average: 0.6375
+
+########## NEW GAME ##########  All Zergling: 16
+--------------- Score average: 14.94	Deviation: 108.47795352051953
+--------------- Win average: 0.5425
+
+########## NEW GAME ##########  All Zergling: 32
+--------------- Score average: 11.975	Deviation: 86.75335368157242
+--------------- Win average: 0.56
+
+########## NEW GAME ##########  All Zergling: 48
+--------------- Score average: 3.945	Deviation: 84.10815641184868
+--------------- Win average: 0.53
+
+########## NEW GAME ##########  Dragoon+Zealot: 4
+--------------- Score average: 57.1125	Deviation: 103.40986337748473
+--------------- Win average: 0.655
+
+########## NEW GAME ##########  Dragoon+Zealot: 16
+--------------- Score average: 22.825	Deviation: 88.69878451816578
+--------------- Win average: 0.6175
+
+########## NEW GAME ##########  Dragoon+Zealot: 32
+--------------- Score average: 15.4175	Deviation: 75.75742995739758
+--------------- Win average: 0.58
+
+########## NEW GAME ##########  Dragoon+Zealot: 48
+--------------- Score average: -6.6575	Deviation: 71.72987657698846
+--------------- Win average: 0.455
+
+########## NEW GAME ##########  Dragoon+Marine: 4
+--------------- Score average: 9.9	Deviation: 146.75987189964414
+--------------- Win average: 0.42
+
+########## NEW GAME ##########  Dragoon+Marine: 16
+--------------- Score average: 63.575	Deviation: 145.71341521973883
+--------------- Win average: 0.6625
+
+########## NEW GAME ##########  Dragoon+Marine: 32
+--------------- Score average: 19.3725	Deviation: 124.56764725943084
+--------------- Win average: 0.555
+
+########## NEW GAME ##########  Dragoon+Marine: 48
+--------------- Score average: 18.6175	Deviation: 126.49824581293609
+--------------- Win average: 0.5575
+
+########## NEW GAME ##########  Marine+Zergling: 4
+--------------- Score average: 32.04	Deviation: 86.3300260627784
+--------------- Win average: 0.565
+
+########## NEW GAME ##########  Marine+Zergling: 16
+--------------- Score average: 32.06	Deviation: 76.41914943258665
+--------------- Win average: 0.655
+
+########## NEW GAME ##########  Marine+Zergling: 32
+--------------- Score average: 25.0025	Deviation: 65.24038238506886
+--------------- Win average: 0.6525
+
+########## NEW GAME ##########  Marine+Zergling: 48
+--------------- Score average: 36.5325	Deviation: 63.599087601552874
+--------------- Win average: 0.7125

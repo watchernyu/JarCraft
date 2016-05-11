@@ -1,8 +1,0 @@
-Player0: Portfolio Online Evolution with DNA population control
-Player1: AttackClosest
---- units: 8
-Units on each side: 24
---- units: 8
-Units on each side: 24
---- units: 16
-Units on each side: 48
