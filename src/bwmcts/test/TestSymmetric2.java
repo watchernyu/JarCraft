@@ -39,7 +39,8 @@ import bwmcts.sparcraft.players.*;
 public class TestSymmetric2 implements BWAPIEventListener  {
 	
 	private static boolean graphics = false;
-	private static boolean SHOWALLRESULTS = false;
+	private static boolean SHOWALLRESULTS = true;
+	private static boolean LOGALLRESULTS = false;
 	JNIBWAPI bwapi;
 	StringBuffer buf;
 	
@@ -64,6 +65,7 @@ public class TestSymmetric2 implements BWAPIEventListener  {
 				new ClusteringConfig(1, 6, new DynamicKMeans(30.0)));
 		GUCTCD guctcdB = new GUCTCD(new UctConfig(1), 
 				new ClusteringConfig(1, 6, new DynamicKMeans(30.0)));
+		
 		RGUCTCD rguctcdA = new RGUCTCD(new UctConfig(0), 
 				new ClusteringConfig(1, 6, new DynamicKMeans(30.0)));
 		RGUCTCD rguctcdB = new RGUCTCD(new UctConfig(1), 
@@ -74,10 +76,11 @@ public class TestSymmetric2 implements BWAPIEventListener  {
 				new ClusteringConfig(1, 6, new DynamicKMeans(30.0)));
 
 		Player p1;
-		//p1 = new Player_Watcher7(0);
+		//p1 = new Player_pg(0);
+		p1 = new Player_Watcher7(0);
 		//p1 = new Player_KiteDPS(0);
 		//p1 = new Player_TestOnly(0);
-		p1 = new Player_NoOverKillAttackValue(0);
+		//p1 = new Player_NoOverKillAttackValue(0);
 		//p1 = new UctLogic(tc.bwapi, guctcdA, 40);
 		//Player p1 = new Player_AttackClosest2(0);
 		//Player p1 = new Player_Defense(0);
@@ -86,10 +89,10 @@ public class TestSymmetric2 implements BWAPIEventListener  {
 		//ayer p2 = new Player_Random(1);
 		//Player p2 = new Player_Nothing(1);
 		Player p2;
-		p2 = new Player_NoOverKillAttackValue(1);
+		//p2 = new Player_NoOverKillAttackValue(1);
 		//p2=new Player_Random(1);
-		//p2 = new Player_pg(1);
-		//p2 = new Player_Kite(1);
+		p2 = new Player_pg(1);
+		//p2 = new Player_KiteDPS(1);
 		//p2 = new Player_Watcher6(1);
 		//p2 = new UctLogic(tc.bwapi, new UCTCD(new UctConfig(1)),40);
 		//Player p2 = new RandomScriptLogic(1);
@@ -103,14 +106,16 @@ public class TestSymmetric2 implements BWAPIEventListener  {
 		tc.buf.append("Player0: "+p1.toString()+"\r\n");
 		tc.buf.append("Player1: "+p2.toString()+"\r\n");
 		
-		int[] numOfUnitsInTest =  new int[]{4,16,32,48};
+		int[] numOfUnitsInTest =  new int[]{4,8,16,32,48};
+		int totalRuns = 50;
 		//tc.newTest(p1, p2, 100, numOfUnitsInTest);
 		
-		tc.newTest(p1, p2, 400,numOfUnitsInTest,TestSetting.D);
-		tc.newTest(p1, p2, 400,numOfUnitsInTest,TestSetting.L);
-		tc.newTest(p1, p2, 400,numOfUnitsInTest,TestSetting.DZ);
-		tc.newTest(p1, p2, 400,numOfUnitsInTest,TestSetting.DM);
-		tc.newTest(p1, p2, 400,numOfUnitsInTest,TestSetting.ML);
+		tc.newTest(p1, p2, totalRuns,numOfUnitsInTest,TestSetting.D);
+		tc.newTest(p1, p2, totalRuns,numOfUnitsInTest,TestSetting.DZ);
+		
+		//tc.newTest(p1, p2, totalRuns,numOfUnitsInTest,TestSetting.L);
+		//tc.newTest(p1, p2, totalRuns,numOfUnitsInTest,TestSetting.DM);
+		//tc.newTest(p1, p2, totalRuns,numOfUnitsInTest,TestSetting.ML);
 		
 		//D,L,DZ,DM,ML;
 		
@@ -132,9 +137,15 @@ public class TestSymmetric2 implements BWAPIEventListener  {
 	    } catch (IOException e) {
 	    	e.printStackTrace();
 	    }
+		
+		tc.moreTest1(tc);
+		tc.moreTest2(tc);
 	}
+	
 
-	private void newTest(Player p1, Player p2, int runs, int[] n) {
+	private void newTestOld(Player p1, Player p2, int runs, int[] n) {
+		//DON'T USE THIS THIS IS OLD
+		
 		// Combat size
 		//int[] n = new int[]{8,16,32,50};
 		//runs is the number of runs
@@ -143,22 +154,8 @@ public class TestSymmetric2 implements BWAPIEventListener  {
 			try {
 				System.out.println("---NEW GAME--- units: " + i+" rounds: "+runs);
 				buf.append("---NEW GAME--- units: " + i+"rounds: "+runs+"\r\n");
-				if(p1 instanceof Player_Watcher6){
-					Player_Watcher6 pw = (Player_Watcher6) p1;
-					pw.setNumUnit(i);
-				}
-				if(p2 instanceof Player_Watcher6){
-					Player_Watcher6 pw = (Player_Watcher6) p2;
-					pw.setNumUnit(i);
-				}
-				if(p1 instanceof Player_Watcher7){
-					Player_Watcher7 pw = (Player_Watcher7) p1;
-					pw.setNumUnit(i);
-				}
-				if(p2 instanceof Player_Watcher7){
-					Player_Watcher7 pw = (Player_Watcher7) p2;
-					pw.setNumUnit(i);
-				}
+				ensureUnitNumSetting(p1,i);
+				ensureUnitNumSetting(p2,i);
 				float result = newTestGames(p1, p2, (int)i, runs);
 				buf.append("AI GAME TEST RESULT: " + result+"\r\n");
 				System.out.println("AI GAME TEST RESULT: " + result);
@@ -177,22 +174,9 @@ public class TestSymmetric2 implements BWAPIEventListener  {
 			try {
 				System.out.println("---NEW GAME--- units: " + i+" rounds: "+runs);
 				buf.append("\r\n########## NEW GAME ##########  ");
-				if(p1 instanceof Player_Watcher6){
-					Player_Watcher6 pw = (Player_Watcher6) p1;
-					pw.setNumUnit(i);
-				}
-				if(p2 instanceof Player_Watcher6){
-					Player_Watcher6 pw = (Player_Watcher6) p2;
-					pw.setNumUnit(i);
-				}
-				if(p1 instanceof Player_Watcher7){
-					Player_Watcher7 pw = (Player_Watcher7) p1;
-					pw.setNumUnit(i);
-				}
-				if(p2 instanceof Player_Watcher7){
-					Player_Watcher7 pw = (Player_Watcher7) p2;
-					pw.setNumUnit(i);
-				}
+				ensureUnitNumSetting(p1,i);
+				ensureUnitNumSetting(p2,i);
+				
 				float result=0;
 				switch(setting){
 				case D:
@@ -222,6 +206,23 @@ public class TestSymmetric2 implements BWAPIEventListener  {
 			}
 		}
 	}
+	
+	private void ensureUnitNumSetting(Player p,int i){
+		if(p instanceof Player_Watcher6){
+			Player_Watcher6 pw = (Player_Watcher6) p;
+			pw.setNumUnit(i);
+		}
+		if(p instanceof Player_Watcher7){
+			Player_Watcher7 pw = (Player_Watcher7) p;
+			pw.setNumUnit(i);
+		}
+		if(p instanceof Player_pg){
+			Player_pg pw = (Player_pg) p;
+			pw.setNumUnit(i);
+		}
+	}
+	
+
 	
 	float newTestGames(Player p1, Player p2, int n, int games) throws Exception{
 		
@@ -357,17 +358,18 @@ public class TestSymmetric2 implements BWAPIEventListener  {
 	    int startXA = 275;
 	    int startXB = 500;
 	    int space = 28;
-	    int startY = 50;
+	    int startAY = 50;
+	    int startBY = 50;
 	    int unitsPerLine = 16;
 	    
 	    for(UnitTypes type : unitsA.keySet()){
 	    	try {
-	    	    state.addUnit(bwapi.getUnitType(type.ordinal()), Players.Player_One.ordinal(),new Position(startXA, startY + space));
+	    	    state.addUnit(bwapi.getUnitType(type.ordinal()), Players.Player_One.ordinal(),new Position(startXA, startAY + space));
 	    	} catch (Exception e){}
 	    	
  	    	for(int i = 1; i < unitsA.get(type); i++){
  	    		int x = startXA - (i/unitsPerLine) * space;
- 	    		int y = startY + space*(i%unitsPerLine) + space;
+ 	    		int y = startAY + space*(i%unitsPerLine) + space;
  	    		try {
  	    			state.addUnit(bwapi.getUnitType(type.ordinal()), Players.Player_One.ordinal(), new Position(x, y));
  	    		} catch (Exception e){
@@ -378,12 +380,12 @@ public class TestSymmetric2 implements BWAPIEventListener  {
 	    }
 	    for(UnitTypes type : unitsB.keySet()){
 	    	try {
-	    	    state.addUnit(bwapi.getUnitType(type.ordinal()), Players.Player_Two.ordinal(),new Position(startXB, startY + space));
+	    	    state.addUnit(bwapi.getUnitType(type.ordinal()), Players.Player_Two.ordinal(),new Position(startXB, startBY + space));
 	    	} catch (Exception e){}
 	    	
  	    	for(int i = 1; i < unitsB.get(type); i++){
  	    		int x = startXB + (i/unitsPerLine) * space;
- 	    		int y = startY + space*(i%unitsPerLine) + space;
+ 	    		int y = startBY + space*(i%unitsPerLine) + space;
  	    		try {
  	    			state.addUnit(bwapi.getUnitType(type.ordinal()), Players.Player_Two.ordinal(), new Position(x, y));
  	    		} catch (Exception e){
@@ -425,7 +427,9 @@ public class TestSymmetric2 implements BWAPIEventListener  {
 		buf.append("All Dragoon: "+ n+ "\r\n");
 		List<Double> results = new ArrayList<Double>();
 		int wins = 0;
+		
 		for(int i = 1; i <= games; i++){
+			long st = System.currentTimeMillis();
 			double result = testGame(p1, p2, unitsA, unitsB); /////////////!!!!!!!!!!!!!!!!!!!
 			results.add(result);
 			if (result>0)
@@ -433,7 +437,9 @@ public class TestSymmetric2 implements BWAPIEventListener  {
 			if(i%1==0){
 				//System.out.println("Score average: " + average(results) + "\tDeviation: " + deviation(results));
 				if(SHOWALLRESULTS){
-					System.out.println("Games: "+i+" Win average: " + ((double)wins)/((double)i));
+					System.out.println("Games: "+i+" Win average: " + ((double)wins)/((double)i)+" Time: "+(System.currentTimeMillis()-st));
+					}
+				if(LOGALLRESULTS){
 					buf.append("Win average: " + ((double)wins)/((double)i)+"\r\n");
 				}
 			}
@@ -462,6 +468,7 @@ public class TestSymmetric2 implements BWAPIEventListener  {
 		List<Double> results = new ArrayList<Double>();
 		int wins = 0;
 		for(int i = 1; i <= games; i++){
+			long st = System.currentTimeMillis();
 			double result = testGame(p1, p2, unitsA, unitsB); /////////////!!!!!!!!!!!!!!!!!!!
 			results.add(result);
 			if (result>0)
@@ -469,7 +476,9 @@ public class TestSymmetric2 implements BWAPIEventListener  {
 			if(i%1==0){
 				//System.out.println("Score average: " + average(results) + "\tDeviation: " + deviation(results));
 				if(SHOWALLRESULTS){
-					System.out.println("Games: "+i+" Win average: " + ((double)wins)/((double)i));
+					System.out.println("Games: "+i+" Win average: " + ((double)wins)/((double)i)+" Time: "+(System.currentTimeMillis()-st));
+					}
+				if(LOGALLRESULTS){
 					buf.append("Win average: " + ((double)wins)/((double)i)+"\r\n");
 				}
 			}
@@ -500,6 +509,7 @@ public class TestSymmetric2 implements BWAPIEventListener  {
 		List<Double> results = new ArrayList<Double>();
 		int wins = 0;
 		for(int i = 1; i <= games; i++){
+			long st = System.currentTimeMillis();
 			double result = testGame(p1, p2, unitsA, unitsB); /////////////!!!!!!!!!!!!!!!!!!!
 			results.add(result);
 			if (result>0)
@@ -507,7 +517,9 @@ public class TestSymmetric2 implements BWAPIEventListener  {
 			if(i%1==0){
 				//System.out.println("Score average: " + average(results) + "\tDeviation: " + deviation(results));
 				if(SHOWALLRESULTS){
-					System.out.println("Games: "+i+" Win average: " + ((double)wins)/((double)i));
+					System.out.println("Games: "+i+" Win average: " + ((double)wins)/((double)i)+" Time: "+(System.currentTimeMillis()-st));
+					}
+				if(LOGALLRESULTS){
 					buf.append("Win average: " + ((double)wins)/((double)i)+"\r\n");
 				}
 			}
@@ -538,6 +550,7 @@ public class TestSymmetric2 implements BWAPIEventListener  {
 		List<Double> results = new ArrayList<Double>();
 		int wins = 0;
 		for(int i = 1; i <= games; i++){
+			long st = System.currentTimeMillis();
 			double result = testGame(p1, p2, unitsA, unitsB); /////////////!!!!!!!!!!!!!!!!!!!
 			results.add(result);
 			if (result>0)
@@ -545,7 +558,9 @@ public class TestSymmetric2 implements BWAPIEventListener  {
 			if(i%1==0){
 				//System.out.println("Score average: " + average(results) + "\tDeviation: " + deviation(results));
 				if(SHOWALLRESULTS){
-					System.out.println("Games: "+i+" Win average: " + ((double)wins)/((double)i));
+					System.out.println("Games: "+i+" Win average: " + ((double)wins)/((double)i)+" Time: "+(System.currentTimeMillis()-st));
+					}
+				if(LOGALLRESULTS){
 					buf.append("Win average: " + ((double)wins)/((double)i)+"\r\n");
 				}
 			}
@@ -576,6 +591,7 @@ public class TestSymmetric2 implements BWAPIEventListener  {
 		List<Double> results = new ArrayList<Double>();
 		int wins = 0;
 		for(int i = 1; i <= games; i++){
+			long st = System.currentTimeMillis();
 			double result = testGame(p1, p2, unitsA, unitsB); /////////////!!!!!!!!!!!!!!!!!!!
 			results.add(result);
 			if (result>0)
@@ -583,7 +599,9 @@ public class TestSymmetric2 implements BWAPIEventListener  {
 			if(i%1==0){
 				//System.out.println("Score average: " + average(results) + "\tDeviation: " + deviation(results));
 				if(SHOWALLRESULTS){
-					System.out.println("Games: "+i+" Win average: " + ((double)wins)/((double)i));
+					System.out.println("Games: "+i+" Win average: " + ((double)wins)/((double)i)+" Time: "+(System.currentTimeMillis()-st));
+				}
+				if(LOGALLRESULTS){
 					buf.append("Win average: " + ((double)wins)/((double)i)+"\r\n");
 				}
 			}
@@ -658,6 +676,86 @@ public class TestSymmetric2 implements BWAPIEventListener  {
 			e.printStackTrace();
 		}
 		*/
+	}
+	
+	public void moreTest1(TestSymmetric2 tc){
+		Player p1;
+		p1 = new Player_Watcher7(0);
+		Player_Watcher7 pw = (Player_Watcher7) p1;
+		pw.initWeak();
+		Player p2;
+		p2 = new Player_pg(1);
+		tc.buf=new StringBuffer();
+		System.out.println("Player0: "+p1.toString());
+		System.out.println("Player1: "+p2.toString());
+		tc.buf.append("Player0: "+p1.toString()+"\r\n");
+		tc.buf.append("Player1: "+p2.toString()+"\r\n");
+		
+		int[] numOfUnitsInTest =  new int[]{4,8,16,32,48};
+		int totalRuns = 50;
+		
+		tc.newTest(p1, p2, totalRuns,numOfUnitsInTest,TestSetting.D);
+		tc.newTest(p1, p2, totalRuns,numOfUnitsInTest,TestSetting.DZ);
+		//D,L,DZ,DM,ML;
+		
+		try {
+			String player0=p1.toString();
+			if (player0.indexOf(" ")>0){
+				player0=player0.substring(0, player0.indexOf(" "));
+			}
+			String player1=p2.toString();
+			if (player1.indexOf(" ")>0){
+				player1=player1.substring(0, player1.indexOf(" "));
+			}
+			DateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd__HH_mm_ss");
+			Calendar cal = Calendar.getInstance();
+			File f = new File(player0+ "_vs_"+player1+"_"+dateFormat.format(cal.getTime())+".txt");
+	        BufferedWriter out = new BufferedWriter(new FileWriter(f));
+	        out.write(tc.buf.toString());
+	        out.close();
+	    } catch (IOException e) {
+	    	e.printStackTrace();
+	    }
+	}
+
+	public void moreTest2(TestSymmetric2 tc){
+		Player p1;
+		p1 = new Player_pg(0);
+		GUCTCD guctcdB = new GUCTCD(new UctConfig(1), 
+				new ClusteringConfig(1, 6, new DynamicKMeans(30.0)));
+		Player p2;
+		p2 = new UctLogic(tc.bwapi, guctcdB, 40);
+		tc.buf=new StringBuffer();
+		System.out.println("Player0: "+p1.toString());
+		System.out.println("Player1: "+p2.toString());
+		tc.buf.append("Player0: "+p1.toString()+"\r\n");
+		tc.buf.append("Player1: "+p2.toString()+"\r\n");
+		
+		int[] numOfUnitsInTest =  new int[]{4,8,16,32,48};
+		int totalRuns = 50;
+		
+		tc.newTest(p1, p2, totalRuns,numOfUnitsInTest,TestSetting.D);
+		tc.newTest(p1, p2, totalRuns,numOfUnitsInTest,TestSetting.DZ);
+		//D,L,DZ,DM,ML;
+		
+		try {
+			String player0=p1.toString();
+			if (player0.indexOf(" ")>0){
+				player0=player0.substring(0, player0.indexOf(" "));
+			}
+			String player1=p2.toString();
+			if (player1.indexOf(" ")>0){
+				player1=player1.substring(0, player1.indexOf(" "));
+			}
+			DateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd__HH_mm_ss");
+			Calendar cal = Calendar.getInstance();
+			File f = new File(player0+ "_vs_"+player1+"_"+dateFormat.format(cal.getTime())+".txt");
+	        BufferedWriter out = new BufferedWriter(new FileWriter(f));
+	        out.write(tc.buf.toString());
+	        out.close();
+	    } catch (IOException e) {
+	    	e.printStackTrace();
+	    }
 	}
 	
 	@Override

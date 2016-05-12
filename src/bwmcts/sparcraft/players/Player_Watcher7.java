@@ -27,16 +27,17 @@ import java.util.Random;
 public class Player_Watcher7 extends Player {
 	boolean showBestDna = false;
 	boolean allowInitRandomMutation = false;
+	private String NAME;
 	
 	private int _id = 0;
 	private int enemy;
 	Random ran;
 	ArrayList<Player> scripts;
 	int numOfUnits=0;
-	long timeLimit = 40;
+	long timeLimit = 40000000;
 	int EVALUTIONMETHOD = 1;//0 means LTD2, 1 means playout
 	int futureSteps = 3;
-	int numOfMutations = 10;
+	int numOfMutations = 20;
 	Population P;
 	boolean firstTimeInit;
 
@@ -47,34 +48,35 @@ public class Player_Watcher7 extends Player {
 		enemy = GameState.getEnemy(_id);
 		ran = new Random();
 		
-		//initialize script players
+		initStrong();//use this to initialize scripts.
+	}
+	
+	public void initWeak(){
+		NAME = "Portfolio Online Evolution with 2 old scripts";
 		scripts = new ArrayList<Player>();
-		scripts.add(new Player_NoOverKillAttackValue(playerID));
-		scripts.add(new Player_NOKAVBack(playerID));
-		scripts.add(new Player_NOKAVForward(playerID));
-		scripts.add(new Player_NOKAVForwardFar(playerID));
-		scripts.add(new Player_NOKAVBackClose(playerID));
-		scripts.add(new Player_NOKAVBackFar(playerID));
-		
-		//scripts.add(new Player_KiteDPS(playerID));
-		//scripts.add(new Player_AttackAndMove(playerID));
-		//scripts.add(new Player_AttackWeakest(playerID));
-		
-		//scripts.add(new Player_AttackClosest(playerID));
-		
-		///////ADD A SCRITP TO WALK FORWARD TO THE ENEMY WEAKEST UNIT....
-		
-		//scripts.add(new Player_Retreat(playerID));
-		//scripts.add(new Player_RetreatFar(playerID));
-		//scripts.add(new Player_Forward(playerID));
-		//scripts.add(new Player_ForwardFar(playerID));
-		//scripts.add(new Player_Defense(playerID));
-		//currently only support playerID = 0;
+		scripts.add(new Player_NoOverKillAttackValue(_id));
+		scripts.add(new Player_KiteDPS(_id));
+	}
+	
+	public void initStrong(){
+		NAME = "Portfolio Online Evolution with 6 new scripts";
+		scripts = new ArrayList<Player>();
+		scripts.add(new Player_NoOverKillAttackValue(_id));
+		scripts.add(new Player_NOKAVBack(_id));
+		scripts.add(new Player_NOKAVForward(_id));
+		scripts.add(new Player_NOKAVForwardFar(_id));
+		scripts.add(new Player_NOKAVBackClose(_id));
+		scripts.add(new Player_NOKAVBackFar(_id));
 	}
 
 	public void setToTestOnly(){
 		futureSteps = 1;
 		numOfMutations = 1;
+	}
+	
+	public void setFirstTimeInit(){
+		//NEED TO SET THIS AT EACH BEGGINNING OF THE GAME (WHEN UNIT NUMBER CHANGES)
+		firstTimeInit = true;
 	}
 	
 	public void getMoves(GameState state, HashMap<Integer, List<UnitAction>> moves, List<UnitAction> moveVec) {
@@ -85,7 +87,8 @@ public class Player_Watcher7 extends Player {
 
 		//System.out.println(moves.size());
 		
-		long startTime = System.currentTimeMillis();
+		long startTime = System.nanoTime();
+		//System.out.println("nano time: "+System.nanoTime());
 		int numOfScripts = scripts.size();
 		//DNA initialization
 		//fix here: we need to add the sense of population.
@@ -96,20 +99,21 @@ public class Player_Watcher7 extends Player {
 			firstTimeInit = false;
 		}
 		
-		P.reinitialize(state);
+		P.reinitialize(state,startTime);
 
+		int evolveCount = 0;
 		for(int e=0;e<numOfMutations;e++){
-			if(System.currentTimeMillis()-startTime>timeLimit){
+			if(System.nanoTime()-startTime>timeLimit){
 				break;
 			}
 			P.evolve(1);
+			evolveCount++;
 		}
-		//System.out.println("Time used: "+ (System.currentTimeMillis()-startTime));
-		
 		ArrayList<Integer> bestDnaPiece = P.bestDna().get(0);
 		if(showBestDna){
 			System.out.println("BestDNA: "+bestDnaPiece);
 		}
+		//System.out.println("Evolve Count: "+evolveCount+" Time used: "+(System.nanoTime()-startTime)/1000000);
 		dnaMoves(state,bestDnaPiece,moves,moveVec);
 	}
 
@@ -127,9 +131,10 @@ public class Player_Watcher7 extends Player {
 
 	public void setNumUnit(int n){
 		this.numOfUnits = n;
+		this.setFirstTimeInit();
 	}
 	
 	public String toString() {
-		return "Portfolio Online Evolution with DNA population control";
+		return NAME;
 	}
 }

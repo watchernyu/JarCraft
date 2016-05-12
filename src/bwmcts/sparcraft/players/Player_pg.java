@@ -23,32 +23,37 @@ public class Player_pg extends Player {
 	//PORTFOLIO GREEDY SEARCH
 	
 	private int _id=0;
-	ArrayList<Player> portfolio;
+	private int _eid = 1;
+	ArrayList<Player> portfolioA;
+	ArrayList<Player> portfolioB;
 	ArrayList<Player> ourScripts;
 	ArrayList<Player> enemyScripts;
-	int Iteration = 3;
-	int R = 3;
-	int numOfUnits = 32;
-	long timeLimit = 40;
+	int Iteration = 1;
+	int R = 5;
+	int numOfUnits = 0;
+	long timeLimit = 40000000; //in nano sec 1 millie =1 000 000
 	long timeElapsed = 0;
 	long startTime = 0;
 	boolean LIMITTIME = true;
 	int ROUNDLIMIT = 10;
+	boolean REACHLIMIT = false;
 	
 	public Player_pg(int playerID) {
 		_id=playerID;
+		_eid = (playerID+1)%2;
 		setID(playerID);
-		portfolio = new ArrayList<Player>();
+		portfolioA = new ArrayList<Player>();
+		portfolioB = new ArrayList<Player>();
 		ourScripts= new ArrayList<Player>();
 		enemyScripts= new ArrayList<Player>();
 		
-		portfolio.add(new Player_NoOverKillAttackValue(playerID));
-		portfolio.add(new Player_NOKAVMicroRight(playerID));
-		portfolio.add(new Player_NOKAVMicroLeft(playerID));
-		portfolio.add(new Player_NOKAVMicroUp(playerID));
-		portfolio.add(new Player_NOKAVMicroDown(playerID));
+		///////////////////////////////////////////
+		//SINCE EACH PLAYER HAS A ID IN IT..... WE NEED TO HAVE TWO PORTFOLIO....
+		portfolioA.add(new Player_NoOverKillAttackValue(_id));
+		portfolioA.add(new Player_KiteDPS(_id));
 		
-		//portfolio.add(new Player_KiteDPS(playerID));
+		portfolioB.add(new Player_NoOverKillAttackValue(_eid));
+		portfolioB.add(new Player_KiteDPS(_eid));
 		//portfolio.add(new Player_NOKAVForward(playerID));
 		//portfolio.add(new Player_NOKAVBack(playerID));
 		//portfolio.add(new Player_NOKAVForwardFar(playerID));
@@ -57,54 +62,64 @@ public class Player_pg extends Player {
 		
 		setting1();
 	}
+	
+	private void initSetting(){
+		//call this after setting the num of units
+		if (numOfUnits>=32){
+			setting2();
+		}
+		if(numOfUnits>=48){
+			setting3();
+		}
+	}
 
 	public void setting1(){
-		R = 0;
 		Iteration = 1;
 		ROUNDLIMIT = 200;
 	}
 	
 	public void setting2(){
-		R = 1;
-		Iteration = 2;
-		ROUNDLIMIT = 75;
+		Iteration = 1;
+		ROUNDLIMIT = 40;
 	}
 	
 	public void setting3(){
-		R = 1;
 		Iteration = 1;
-		ROUNDLIMIT = 25;
+		ROUNDLIMIT = 15;
 	}
 	
 	public void getMoves(GameState state, HashMap<Integer,List<UnitAction>> moves, List<UnitAction>  moveVec)
 	{
+		startTime = System.nanoTime();
 	    moveVec.clear();
-	    
-	    startTime = System.currentTimeMillis();
+	    REACHLIMIT = false;
 	    
 	    for(int i=0;i<numOfUnits;i++){
-	    	enemyScripts.add(portfolio.get(0));
+	    	enemyScripts.add(portfolioB.get(0));
 	    }
 	    
-	    fill(enemyScripts,portfolio.get(0));
+	    fill(enemyScripts,portfolioB.get(0));
 	    ourScripts = getSeedScripts(state, _id, enemyScripts);
 	    enemyScripts = getSeedScripts(state, (_id+1)%2,ourScripts);
+	    //System.out.println(ourScripts);
 	    improve(state, _id, ourScripts,enemyScripts);
-	    
+	    //System.out.println(ourScripts);
 	    for(int r=0;r<R;r++){
+			if(LIMITTIME&&(System.nanoTime()-startTime>timeLimit)){
+				break; //this kind of structure is safer.
+			}
 	    	improve(state, _id, ourScripts,enemyScripts);
 	    	improve(state, (_id+1)%2,enemyScripts,ourScripts);
 	    }
 	    
-	    
-	    if(!LIMITTIME){
-	    	//System.out.println("PG Time used: "+(System.currentTimeMillis()-startTime));
-	    }
-	    
+	    //System.out.println("Time used: "+(System.nanoTime()-startTime)/1000000);
 	    makeMove(ourScripts,state,moves,moveVec);
 	}
 	
 	public ArrayList<Player> getSeedScripts(GameState state,int playerId,ArrayList<Player> enemy_scripts){
+		ArrayList<Player> portfolio;
+		if(playerId==_id){portfolio=portfolioA;}else{portfolio=portfolioB;}
+		
 		int bestValue = -99999;
 		Player bestScript=portfolio.get(0);
 		ArrayList<Player> seedScripts = new ArrayList<Player>();
@@ -113,8 +128,12 @@ public class Player_pg extends Player {
 		}
 		
 		for(int i=0;i<portfolio.size();i++){
+			if(LIMITTIME&&(System.nanoTime()-startTime>timeLimit)){
+				break; //this kind of structure is safer.
+			}
 			fill(seedScripts,portfolio.get(i));
 			int value = playout(state,playerId,seedScripts,enemy_scripts);
+
 			//need to create a helper player that
 			//has a sequence of scripts and will getmoves from those scripts.
 			
@@ -134,22 +153,25 @@ public class Player_pg extends Player {
 	}
 	
 	public void improve(GameState state,int playerId,ArrayList<Player> self_scripts,ArrayList<Player> enemy_scripts){
-
+		ArrayList<Player> portfolio;
+		if(playerId==_id){portfolio=portfolioA;}else{portfolio=portfolioB;}
+		
 		int count = 0;//just for testing.
 		for (int i=0;i<Iteration;i++){
 			for (int u=0;u<numOfUnits;u++){
-				if(LIMITTIME&&System.currentTimeMillis()-startTime>timeLimit){
-					//System.out.println("time exceeded");
-					return;
-				}
-				
+				boolean findnew = false;
 				int bestValue = -99999;
 				Player bestScript=portfolio.get(0);
 				for(int s=0;s<portfolio.size();s++){
+					if(LIMITTIME&&(System.nanoTime()-startTime>timeLimit)){
+						if(findnew){self_scripts.set(u, bestScript);}
+						return;
+					}
 					count++;
 					self_scripts.set(u, portfolio.get(s));
 					int value = playout(state,playerId,self_scripts,enemy_scripts);
 					if(value>bestValue){
+						findnew = true;
 						bestValue = value;
 						bestScript = portfolio.get(s);
 					}
@@ -164,10 +186,22 @@ public class Player_pg extends Player {
 	public int playout(GameState state,int playerId,ArrayList<Player> our_scripts,ArrayList<Player> enemy_scripts){
 		GameState sc = state.clone(); // sc for state clone
 		
-		Game gc = new Game(sc, new Player_pg_helper(0,our_scripts),
-				new Player_pg_helper(1,enemy_scripts), ROUNDLIMIT, false); //send scripts to game...
+		Game gc;
+		if(playerId==0){
+			 gc = new Game(sc, new Player_pg_helper(playerId,our_scripts),
+					new Player_pg_helper((playerId+1)%2,enemy_scripts), ROUNDLIMIT, false); //send scripts to game...
+		}else{
+			 gc = new Game(sc, new Player_pg_helper((playerId+1)%2, enemy_scripts),
+					 new Player_pg_helper(playerId,our_scripts), ROUNDLIMIT, false); //send scripts to game...
+		}
+
 		gc.play();
+		//Game gc = new Game(sc, new Player_NoOverKillAttackValue(_id),
+		//		new Player_NoOverKillAttackValue(), ROUNDLIMIT, false); //send scripts to game...
+		//gc.play();
+		
 		int scoreval = gc.getState().eval(playerId, EvaluationMethods.LTD2)._val;
+		//System.out.println("ID: "+playerId+" score: "+scoreval);
 		return scoreval;
 	}
 	
@@ -191,6 +225,11 @@ public class Player_pg extends Player {
 	}
 	
 	public String toString(){
-		return "Churchill's Portfolio Greedy Search";
+		return "Portfolio Greedy Search";
+	}
+	
+	public void setNumUnit(int i){
+		numOfUnits = i;
+		initSetting();
 	}
 }

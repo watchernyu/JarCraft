@@ -20,7 +20,6 @@ public class Player_pg_helper extends Player {
 	//helper for PORTFOLIO GREEDY SEARCH
 	
 	private int _id=0;
-	ArrayList<Player> portfolio;
 	ArrayList<Player> ourScripts;
 	
 	public Player_pg_helper(int playerID,ArrayList<Player> ourScripts) {
@@ -29,13 +28,6 @@ public class Player_pg_helper extends Player {
 		this.ourScripts = ourScripts;
 		_id=playerID;
 		setID(playerID);
-		portfolio = new ArrayList<Player>();
-		portfolio.add(new Player_NoOverKillAttackValue(playerID));
-		portfolio.add(new Player_NOKAVForward(playerID));
-		portfolio.add(new Player_NOKAVBack(playerID));
-		portfolio.add(new Player_NOKAVForwardFar(playerID));
-		portfolio.add(new Player_NOKAVBackClose(playerID));
-		portfolio.add(new Player_NOKAVBackFar(playerID));
 	}
 
 	public void getMoves(GameState state, HashMap<Integer,List<UnitAction>> moves, List<UnitAction>  moveVec)
@@ -57,6 +49,6 @@ public class Player_pg_helper extends Player {
 	}
 	
 	public String toString(){
-		return "AttackClosest";
+		return "PGS helper";
 	}
 }

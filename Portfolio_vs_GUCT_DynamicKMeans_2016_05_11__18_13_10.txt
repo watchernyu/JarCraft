@@ -1,0 +1,42 @@
+Player0: Portfolio Online Evolution with 6 new scripts
+Player1: GUCT_DynamicKMeans - hpMulitplier: 1.0	clusters: 6	K: 1.600000023841858	maxChildren: 20	maxPlayerIndex: 1	debug: false	simulationSteps: 2147483647	nokModelling: true	LTD2: true
+
+########## NEW GAME ##########  All Dragoon: 4
+--------------- Score average: 137.26	Deviation: 159.27483291468243
+--------------- Win average: 0.82
+
+########## NEW GAME ##########  All Dragoon: 8
+--------------- Score average: 175.24	Deviation: 130.192098070505
+--------------- Win average: 0.9
+
+########## NEW GAME ##########  All Dragoon: 16
+--------------- Score average: 180.2	Deviation: 99.68510420318574
+--------------- Win average: 0.94
+
+########## NEW GAME ##########  All Dragoon: 32
+--------------- Score average: 175.1	Deviation: 76.17250159998684
+--------------- Win average: 0.98
+
+########## NEW GAME ##########  All Dragoon: 48
+--------------- Score average: 114.42	Deviation: 87.14610490435015
+--------------- Win average: 0.88
+
+########## NEW GAME ##########  Dragoon+Zealot: 4
+--------------- Score average: 137.54	Deviation: 150.6916334771111
+--------------- Win average: 0.8
+
+########## NEW GAME ##########  Dragoon+Zealot: 8
+--------------- Score average: 282.0	Deviation: 118.11028744355845
+--------------- Win average: 0.98
+
+########## NEW GAME ##########  Dragoon+Zealot: 16
+--------------- Score average: 199.4	Deviation: 114.5986038309368
+--------------- Win average: 0.9
+
+########## NEW GAME ##########  Dragoon+Zealot: 32
+--------------- Score average: 223.06	Deviation: 85.47711038634847
+--------------- Win average: 0.94
+
+########## NEW GAME ##########  Dragoon+Zealot: 48
+--------------- Score average: 226.98	Deviation: 48.35017683525056
+--------------- Win average: 1.0

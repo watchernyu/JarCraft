@@ -12,8 +12,8 @@ import bwmcts.sparcraft.players.Player_NoOverKillAttackValue;
 public class Population {
 	public boolean showEvolutionProcess = false;
 	public double mutateRate = 0.2;
-	public int numMutateEachSuperior = 2;
-	public int numOfBest = 3;
+	public int numMutateEachSuperior = 3;
+	public int numOfBest = 4;
 	public int generation;
 	public int bestscore;
 	//public ArrayList<ArrayList<ArrayList<Integer>>> DNAs;
@@ -24,6 +24,8 @@ public class Population {
 	public int numOfScripts;
 	public int numOfBeasts;
 	public int numOfUnits;
+	public long STARTTIME = 0;
+	public long TIMELIMIT = 40000000;
 
 	private int evalGameRoundLimit = 20;
 	private Random ran;
@@ -50,13 +52,13 @@ public class Population {
 		playerForEval2 = new Player_NoOverKillAttackValue(1);
 	}
 	
-	public void reinitialize(GameState s){
+	public void reinitialize(GameState s,long starttime){
 		this.state = s;
+		this.STARTTIME = starttime;
 		beasts.clear();
 		initialize();
 		
 		/*
-		//long st = System.currentTimeMillis();//##
 		for(int p=0;p<numOfBest;p++){//refresh the score..
 			beasts.get(p).score = evalDna(state,beasts.get(p).getDna());
 		}
@@ -73,13 +75,11 @@ public class Population {
 			beasts.add(new Beast(DNA,score));
 		}
 		select();
-		//System.out.println("time used: "+(System.currentTimeMillis()-st));
 		 * 
 		 */
 	}
 
 	public void initialize(){
-		//long st = System.currentTimeMillis();//##
 		int basicScore = 0;
 		for(int p=0;p<1;p++){
 			ArrayList<ArrayList<Integer>> DNA = new ArrayList<ArrayList<Integer>>();
@@ -105,7 +105,7 @@ public class Population {
 			beasts.add(new Beast(DNA,basicScore));
 		}
 		select();
-		//System.out.println("time used: "+(System.currentTimeMillis()-st));
+		
 	}
 	
 	public void evolve(int rounds){//continue evolving for a certain rounds
@@ -128,7 +128,6 @@ public class Population {
 	}
 	
 	public void select(){//basically discard all the beasts that are less valuable..
-		//long st = System.currentTimeMillis();
 		Collections.sort(beasts);
 		generation ++;
 
@@ -142,7 +141,6 @@ public class Population {
 			System.out.println("Generation: "+generation);//only for testing
 			showBeasts();//only for testing
 		}
-		//System.out.println("Select time used: "+(System.currentTimeMillis()-st));
 	}
 	
 	public void showBeasts(){//will display the all the beasts in population, along with their scores.
@@ -153,16 +151,15 @@ public class Population {
 	}
 	
 	public void mutateAll(){
-		//long st = System.currentTimeMillis();
 		for(int index =0;index<numOfBest;index++){//the best 5 dnas are used to mutate
 			ArrayList<ArrayList<Integer>> currentDna = beasts.get(index).getDna();
 			for(int m=0;m<numMutateEachSuperior;m++){//each superior DNA will be mutated 4 times
+				if((System.nanoTime()-STARTTIME)>TIMELIMIT){return;}
 				ArrayList<ArrayList<Integer>> newDna = mutateDna(currentDna);
 				int score = evalDna(state,newDna);
 				beasts.add(new Beast(newDna,score));
 			}
 		}
-		//System.out.println("time used: "+(System.currentTimeMillis()-st));
 	}
 	
 	public ArrayList<ArrayList<Integer>> mutateDna(ArrayList<ArrayList<Integer>> DNA) {
@@ -190,9 +187,8 @@ public class Population {
 		GameState sc = currentState.clone(); // sc for state clone
 		Game gc = new Game(sc, playerForEval1,
 				playerForEval2, evalGameRoundLimit, false, scripts); //send scripts to game...
-		//long st = System.currentTimeMillis();
+		//System.out.println("DNA length: "+DNA.size()+" DNA inner size: "+DNA.get(0).size());
 		int ss = gc.dnaEvalGroup(DNA,1);
-		//System.out.println("time used: "+(System.currentTimeMillis()-st));
 		return ss; //HARDCODE EVALUATION METHOD TO 1
 	}
 }

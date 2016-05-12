@@ -164,6 +164,7 @@ public class Game {
 		for (Integer u : moves.keySet()){
 			//this u is a unit index!!
 			//System.out.println("monitor: "+u +": "+monitor[u]+" DNA size: "+DNA.size());
+			//System.out.println("mlength: "+monitor.length+" DNA length: "+DNA.size()+" u: "+u +" monitor[u]: "+monitor[u]);
 			
 			int scriptN = DNA.get(monitor[u]).get(u);
 			monitor[u]+=1;

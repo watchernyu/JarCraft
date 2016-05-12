@@ -1,0 +1,42 @@
+Player0: Portfolio Online Evolution with DNA population control
+Player1: NOK-AV
+
+########## NEW GAME ##########  All Dragoon: 4
+--------------- Score average: 262.98	Deviation: 103.2229606240782
+--------------- Win average: 0.98
+
+########## NEW GAME ##########  All Dragoon: 8
+--------------- Score average: 278.94	Deviation: 74.58992157121497
+--------------- Win average: 1.0
+
+########## NEW GAME ##########  All Dragoon: 16
+--------------- Score average: 253.42	Deviation: 51.60662360588997
+--------------- Win average: 1.0
+
+########## NEW GAME ##########  All Dragoon: 32
+--------------- Score average: 218.84	Deviation: 56.10324767783056
+--------------- Win average: 0.98
+
+########## NEW GAME ##########  All Dragoon: 48
+--------------- Score average: 186.46	Deviation: 40.95959472455752
+--------------- Win average: 1.0
+
+########## NEW GAME ##########  Dragoon+Zealot: 4
+--------------- Score average: 302.22	Deviation: 129.60729763404532
+--------------- Win average: 0.98
+
+########## NEW GAME ##########  Dragoon+Zealot: 8
+--------------- Score average: 361.16	Deviation: 65.12952018862109
+--------------- Win average: 1.0
+
+########## NEW GAME ##########  Dragoon+Zealot: 16
+--------------- Score average: 340.4	Deviation: 46.48440598738462
+--------------- Win average: 1.0
+
+########## NEW GAME ##########  Dragoon+Zealot: 32
+--------------- Score average: 313.12	Deviation: 36.72908384373343
+--------------- Win average: 1.0
+
+########## NEW GAME ##########  Dragoon+Zealot: 48
+--------------- Score average: 261.98	Deviation: 40.77964688419948
+--------------- Win average: 1.0
