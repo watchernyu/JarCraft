@@ -40,7 +40,7 @@ public class Player_Watcher8 extends Player {
 	long timeLimit = 20000000;
 	int EVALUTIONMETHOD = 1;//0 means LTD2, 1 means playout
 	int futureSteps = 3;
-	int numOfMutations = 10;
+	int numOfMutations = 30;
 	Population P;
 	boolean firstTimeInit;
 

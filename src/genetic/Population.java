@@ -25,7 +25,7 @@ public class Population {
 	public int numOfBeasts;
 	public int numOfUnits;
 	public long STARTTIME = 0;
-	public long TIMELIMIT = 40000000;
+	public long TIMELIMIT = 20000000;
 
 	private int evalGameRoundLimit = 20;
 	private Random ran;
