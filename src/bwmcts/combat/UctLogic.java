@@ -20,7 +20,9 @@ import bwmcts.sparcraft.players.Player;
 import bwmcts.uct.UCT;
 import bwmcts.uct.flatguctcd.FlatGUCTCD;
 import bwmcts.uct.guctcd.GUCTCD;
+import bwmcts.uct.guctcd.GUCTCD_p;
 import bwmcts.uct.rguctcd.RGUCTCD;
+import bwmcts.uct.rguctcd.RGUCTCD_p;
 import javabot.JNIBWAPI;
 import javabot.util.BWColor;
 
@@ -54,6 +56,9 @@ public class UctLogic extends Player implements ICombatLogic {
 			move = uct.search(state.clone(), timeBudget);
 			if (uct instanceof GUCTCD){
 				clusters = ((GUCTCD)uct).getClusters();
+			}
+			if (uct instanceof GUCTCD_p){
+				clusters = ((GUCTCD_p)uct).getClusters();
 			}
 			System.out.println();
 			executeActions(bwapi,state,move);
@@ -176,6 +181,12 @@ public class UctLogic extends Player implements ICombatLogic {
 		}
 		if (uct instanceof FlatGUCTCD){
 			clusters = ((FlatGUCTCD)uct).getClusters();
+		}
+		if (uct instanceof GUCTCD_p){
+			clusters = ((GUCTCD_p)uct).getClusters();
+		}
+		if (uct instanceof RGUCTCD_p){
+			clusters = ((RGUCTCD_p)uct).getClusters();
 		}
 		/*
 		if (guctcd!=null){
