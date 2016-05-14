@@ -22,7 +22,7 @@ import bwmcts.sparcraft.UnitActionTypes;
 public class Player_PGS extends Player {
 	// PORTFOLIO GREEDY SEARCH
 	// THIS IS NOW SPECIFICALLY THE OLD CHURCHILL'S VERSION.
-	public String NAME = "PGS-original";
+	public String NAME = "PGS-2";
 	private int _id = 0;
 	private int _eid = 1;
 	ArrayList<Player> portfolio0;
@@ -30,14 +30,14 @@ public class Player_PGS extends Player {
 	ArrayList<Integer> ourScripts;
 	ArrayList<Integer> enemyScripts;
 	int Iteration = 1;
-	int R = 1;
+	int R = 0;
 	int numOfUnits = 0;
 	long timeLimit = 20000000; // in nano sec 1 millie =1 000 000
 	long timeElapsed = 0;
 	long startTime = 0;
 	boolean LIMITTIME = true;
 	int ROUNDLIMIT = 200;
-	boolean REACHLIMIT = false;
+	//boolean REACHLIMIT = false;
 	Player pg_helper0;
 	Player pg_helper1;
 	Player_pg_helper _pg_helper0;
@@ -71,9 +71,56 @@ public class Player_PGS extends Player {
 		pg_helper1 = new Player_pg_helper(1,portfolio0,portfolio1);
 		_pg_helper0 = (Player_pg_helper) pg_helper0;
 		_pg_helper1 = (Player_pg_helper) pg_helper1;
+		
+		NAME = "PGS-2";
 	}
+	
+	public void init2scripts(){
+		portfolio0 = new ArrayList<Player>();
+		portfolio1 = new ArrayList<Player>();
+		
+		portfolio0.add(new Player_NoOverKillAttackValue(0));
+		portfolio0.add(new Player_KiteDPS(0));
 
-	public void initEnhanced() {
+		portfolio1.add(new Player_NoOverKillAttackValue(1));
+		portfolio1.add(new Player_KiteDPS(1));
+
+		pg_helper0 = new Player_pg_helper(0,portfolio0,portfolio1);
+		pg_helper1 = new Player_pg_helper(1,portfolio0,portfolio1);
+		_pg_helper0 = (Player_pg_helper) pg_helper0;
+		_pg_helper1 = (Player_pg_helper) pg_helper1;
+		
+		NAME = "PGS-2";
+	}
+	
+	public void init6scripts(){
+		portfolio0 = new ArrayList<Player>();
+		portfolio1 = new ArrayList<Player>();
+
+		portfolio0.add(new Player_NoOverKillAttackValue(0));
+		portfolio0.add(new Player_NOKAVForward(0));
+		portfolio0.add(new Player_NOKAVBack(0));
+		portfolio0.add(new Player_NOKAVForwardFar(0));
+		portfolio0.add(new Player_NOKAVBackClose(0));
+		portfolio0.add(new Player_NOKAVBackFar(0));
+
+		portfolio1.add(new Player_NoOverKillAttackValue(1));
+		portfolio1.add(new Player_NOKAVForward(1));
+		portfolio1.add(new Player_NOKAVBack(1));
+		portfolio1.add(new Player_NOKAVForwardFar(1));
+		portfolio1.add(new Player_NOKAVBackClose(1));
+		portfolio1.add(new Player_NOKAVBackFar(1));
+
+		pg_helper0 = new Player_pg_helper(0,portfolio0,portfolio1);
+		pg_helper1 = new Player_pg_helper(1,portfolio0,portfolio1);
+		_pg_helper0 = (Player_pg_helper) pg_helper0;
+		_pg_helper1 = (Player_pg_helper) pg_helper1;
+		
+		NAME = "PGS-6";
+	}
+	
+	/*
+	public void initEnhancedzzzzzz() {
 		NAME = "PGS-enhanced";
 		Iteration = 2;
 		R = 2;
@@ -91,7 +138,7 @@ public class Player_PGS extends Player {
 		} else {
 			ROUNDLIMIT = 200;
 		}
-	}
+	}*/
 
 	public void getMoves(GameState state, HashMap<Integer, List<UnitAction>> moves, List<UnitAction> moveVec) {
 		startTime = System.nanoTime();

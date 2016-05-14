@@ -27,7 +27,7 @@ public class Population {
 	public long STARTTIME = 0;
 	public long TIMELIMIT = 20000000;
 
-	private int evalGameRoundLimit = 20;
+	private int evalGameRoundLimit = 25;
 	private Random ran;
 	private GameState state; //THIS WILL NOT BE UPDATED SO EACH TIME IN GETMOVES() 
 	private ArrayList<Player> scripts;

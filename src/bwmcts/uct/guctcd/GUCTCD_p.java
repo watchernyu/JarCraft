@@ -46,6 +46,7 @@ import bwmcts.uct.iuctcd.IuctNode;
 
 public class GUCTCD_p extends UCT {
 
+	private String NAME;
 	private ClusteringConfig guctConfig;
 	
 	private List<List<Unit>> clustersA;
@@ -62,11 +63,26 @@ public class GUCTCD_p extends UCT {
 		// Add scripts
 		scripts = new ArrayList<Player>();
 		scripts.add(new Player_NoOverKillAttackValue(config.getMaxPlayerIndex()));
+		scripts.add(new Player_KiteDPS(config.getMaxPlayerIndex()));
+		NAME = "clusterUCT2";
+	}
+	
+	public void init2scripts(){
+		scripts = new ArrayList<Player>();
+		scripts.add(new Player_NoOverKillAttackValue(config.getMaxPlayerIndex()));
+		scripts.add(new Player_KiteDPS(config.getMaxPlayerIndex()));
+		NAME = "clusterUCT2";
+	}
+	
+	public void init6scripts(){
+		scripts = new ArrayList<Player>();
+		scripts.add(new Player_NoOverKillAttackValue(config.getMaxPlayerIndex()));
 		scripts.add(new Player_NOKAVForward(config.getMaxPlayerIndex()));
 		scripts.add(new Player_NOKAVBack(config.getMaxPlayerIndex()));
 		scripts.add(new Player_NOKAVForwardFar(config.getMaxPlayerIndex()));
 		scripts.add(new Player_NOKAVBackClose(config.getMaxPlayerIndex()));
 		scripts.add(new Player_NOKAVBackFar(config.getMaxPlayerIndex()));
+		NAME = "clusterUCT6";
 	}
 
 	public List<UnitAction> search(GameState state, long timeBudget){
@@ -409,7 +425,7 @@ public class GUCTCD_p extends UCT {
 	}
 	
 	public String toString(){
-		return "GUCT_"+this.guctConfig.toString()+ "\t"+this.config.toString();
+		return NAME+"_GUCT_"+this.guctConfig.toString()+ "\t"+this.config.toString();
 	}
 	
 }

@@ -24,7 +24,7 @@ import genetic.Population;
 
 import java.util.Random;
 
-public class Player_Watcher8 extends Player {
+public class Player_Evolution extends Player {
 	//for optimization
 	
 	boolean showBestDna = false;
@@ -40,30 +40,30 @@ public class Player_Watcher8 extends Player {
 	long timeLimit = 20000000;
 	int EVALUTIONMETHOD = 1;//0 means LTD2, 1 means playout
 	int futureSteps = 3;
-	int numOfMutations = 30;
+	int numOfMutations = 25;
 	Population P;
 	boolean firstTimeInit;
 
-	public Player_Watcher8(int playerID) {
+	public Player_Evolution(int playerID) {
 		firstTimeInit=true;
 		_id = playerID;
 		setID(playerID);
 		enemy = GameState.getEnemy(_id);
 		ran = new Random();
 		
-		initStrong();//use this to initialize scripts.
+		init2scripts();//use this to initialize scripts.
 	}
 	
-	public void initWeak(){
-		NAME = "Portfolio Online Evolution with 2 old scripts";
+	public void init2scripts(){
+		NAME = "POE_2";
 		scripts = new ArrayList<Player>();
 		scripts.add(new Player_NoOverKillAttackValue(_id));
 		scripts.add(new Player_KiteDPS(_id));
 		scriptsSize = scripts.size();
 	}
 	
-	public void initStrong(){
-		NAME = "Portfolio Online Evolution with 6 new scripts";
+	public void init6scripts(){
+		NAME = "POE_6";
 		scripts = new ArrayList<Player>();
 		scripts.add(new Player_NoOverKillAttackValue(_id));
 		scripts.add(new Player_NOKAVBack(_id));

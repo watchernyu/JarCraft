@@ -16,6 +16,7 @@ import bwmcts.sparcraft.Players;
 import bwmcts.sparcraft.UnitAction;
 import bwmcts.sparcraft.players.Player;
 import bwmcts.sparcraft.players.Player_Kite;
+import bwmcts.sparcraft.players.Player_KiteDPS;
 import bwmcts.sparcraft.players.Player_NOKAVBack;
 import bwmcts.sparcraft.players.Player_NOKAVBackClose;
 import bwmcts.sparcraft.players.Player_NOKAVBackFar;
@@ -31,6 +32,7 @@ import bwmcts.uct.UctStats;
 public class IUCTCD_p extends UCT {
 	
 	private ArrayList<Player> scripts;
+	private String NAME;
 	
 	public IUCTCD_p(UctConfig config) {
 		super(config);
@@ -43,6 +45,26 @@ public class IUCTCD_p extends UCT {
 		scripts.add(new Player_NOKAVForwardFar(config.getMaxPlayerIndex()));
 		scripts.add(new Player_NOKAVBackClose(config.getMaxPlayerIndex()));
 		scripts.add(new Player_NOKAVBackFar(config.getMaxPlayerIndex()));
+		NAME = "scriptUCT2";
+	}
+	
+	
+	public void init2scripts(){
+		scripts = new ArrayList<Player>();
+		scripts.add(new Player_NoOverKillAttackValue(config.getMaxPlayerIndex()));
+		scripts.add(new Player_KiteDPS(config.getMaxPlayerIndex()));
+		NAME = "scriptUCT2";
+	}
+	
+	public void init6scripts(){
+		scripts = new ArrayList<Player>();
+		scripts.add(new Player_NoOverKillAttackValue(config.getMaxPlayerIndex()));
+		scripts.add(new Player_NOKAVForward(config.getMaxPlayerIndex()));
+		scripts.add(new Player_NOKAVBack(config.getMaxPlayerIndex()));
+		scripts.add(new Player_NOKAVForwardFar(config.getMaxPlayerIndex()));
+		scripts.add(new Player_NOKAVBackClose(config.getMaxPlayerIndex()));
+		scripts.add(new Player_NOKAVBackFar(config.getMaxPlayerIndex()));
+		NAME = "scriptUCT6";
 	}
 	
 	@Override
@@ -264,7 +286,7 @@ public class IUCTCD_p extends UCT {
 		// Divide units into two groups
 		for(UnitState unitState : move){
 			
-			System.out.print(unitState.type.toString() + " ");
+			//System.out.print(unitState.type.toString() + " ");
 			
 			for (int i = 0; i < scripts.size(); i++) {
 				if (unitState.type == UnitStateTypes.values()[i]) {
@@ -301,7 +323,7 @@ public class IUCTCD_p extends UCT {
 	}
 	
 	public String toString(){
-		return "IUCTCD - "+this.config.toString();
+		return NAME+"_IUCTCD - "+this.config.toString();
 	}
 	
 }
