@@ -40,11 +40,7 @@ public class IUCTCD_p extends UCT {
 		// Add scripts
 		scripts = new ArrayList<Player>();
 		scripts.add(new Player_NoOverKillAttackValue(config.getMaxPlayerIndex()));
-		scripts.add(new Player_NOKAVForward(config.getMaxPlayerIndex()));
-		scripts.add(new Player_NOKAVBack(config.getMaxPlayerIndex()));
-		scripts.add(new Player_NOKAVForwardFar(config.getMaxPlayerIndex()));
-		scripts.add(new Player_NOKAVBackClose(config.getMaxPlayerIndex()));
-		scripts.add(new Player_NOKAVBackFar(config.getMaxPlayerIndex()));
+		scripts.add(new Player_KiteDPS(config.getMaxPlayerIndex()));
 		NAME = "scriptUCT2";
 	}
 	

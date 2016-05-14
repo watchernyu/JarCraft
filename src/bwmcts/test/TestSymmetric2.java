@@ -40,7 +40,7 @@ import bwmcts.sparcraft.players.*;
 
 public class TestSymmetric2 implements BWAPIEventListener  {
 	
-	private static boolean graphics = true;
+	private static boolean graphics = false;
 	private static boolean SHOWALLRESULTS = true;
 	private static boolean LOGALLRESULTS = false;
 	BufferedWriter OUT;
