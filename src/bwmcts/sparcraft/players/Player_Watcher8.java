@@ -24,7 +24,9 @@ import genetic.Population;
 
 import java.util.Random;
 
-public class Player_Watcher7 extends Player {
+public class Player_Watcher8 extends Player {
+	//for optimization
+	
 	boolean showBestDna = false;
 	boolean allowInitRandomMutation = false;
 	private String NAME;
@@ -35,14 +37,14 @@ public class Player_Watcher7 extends Player {
 	ArrayList<Player> scripts;
 	int scriptsSize;
 	int numOfUnits=0;
-	long timeLimit = 40000000;
+	long timeLimit = 20000000;
 	int EVALUTIONMETHOD = 1;//0 means LTD2, 1 means playout
 	int futureSteps = 3;
 	int numOfMutations = 10;
 	Population P;
 	boolean firstTimeInit;
 
-	public Player_Watcher7(int playerID) {
+	public Player_Watcher8(int playerID) {
 		firstTimeInit=true;
 		_id = playerID;
 		setID(playerID);
@@ -117,9 +119,7 @@ public class Player_Watcher7 extends Player {
 			System.out.println("BestDNA: "+bestDnaPiece);
 		}
 		//System.out.println("Evolve Count: "+evolveCount+" Time used: "+(System.nanoTime()-startTime)/1000000);
-		
 		dnaMoves(state,bestDnaPiece,moves,moveVec);
-
 	}
 
 	public void dnaMoves(GameState state, ArrayList<Integer> DNAi,
@@ -148,22 +148,6 @@ public class Player_Watcher7 extends Player {
 			}
 		}
 	}
-	
-	/*
-	public void dnaMoves(GameState state, ArrayList<Integer> DNAi,
-			HashMap<Integer,List<UnitAction>> moves, List<UnitAction> moveVec){
-		for (Integer u : moves.keySet()){
-			//this u is a unit index!!
-			int scriptN = DNAi.get(u);
-			
-			Player scriptToUse = this.scripts.get(scriptN); //
-			
-			HashMap<Integer,List<UnitAction>> oneUnitMap = new HashMap<Integer,List<UnitAction>>();
-			oneUnitMap.put(u, moves.get(u));
-			
-			scriptToUse.getMoves(state, oneUnitMap, moveVec);
-		}
-	}*/
 
 	public void setNumUnit(int n){
 		this.numOfUnits = n;

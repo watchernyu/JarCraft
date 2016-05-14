@@ -38,7 +38,7 @@ import bwmcts.sparcraft.players.*;
 
 public class TestSymmetric2 implements BWAPIEventListener  {
 	
-	private static boolean graphics = false;
+	private static boolean graphics = true;
 	private static boolean SHOWALLRESULTS = true;
 	private static boolean LOGALLRESULTS = false;
 	JNIBWAPI bwapi;
@@ -75,38 +75,39 @@ public class TestSymmetric2 implements BWAPIEventListener  {
 		FlatGUCTCD flatGuctcdB = new FlatGUCTCD(new UctConfig(1, true), 
 				new ClusteringConfig(1, 6, new DynamicKMeans(30.0)));
 
+		tc.buf=new StringBuffer();
+////////IN BETWEEN SET EXPERIMENTS///////////////////////////////////////////////////////////
+		boolean EXPERIMENT = false;
+		
+		if(EXPERIMENT){
+			tc.PGSvPGSEN(tc);
+			return;} //use to skip all the code follows
+////////IN BETWEEN SET EXPERIMENTS///////////////////////////////////////////////////////////
+
+		
 		Player p1;
-		//p1 = new Player_pg(0);
-		p1 = new Player_Watcher7(0);
-		//p1 = new Player_KiteDPS(0);
-		//p1 = new Player_TestOnly(0);
+		p1 = new Player_Watcher8(0);
+		//p1 = new Player_PGS(0);
 		//p1 = new Player_NoOverKillAttackValue(0);
 		//p1 = new UctLogic(tc.bwapi, guctcdA, 40);
-		//Player p1 = new Player_AttackClosest2(0);
-		//Player p1 = new Player_Defense(0);
 		//Player p1 = new Player_ClusteredUnitStateToUnitAction(0);
 		//Player p1 = new UctLogic(tc.bwapi, new IUCTCD(new UctConfig(0)),40);
 		//ayer p2 = new Player_Random(1);
 		//Player p2 = new Player_Nothing(1);
 		Player p2;
+		//p2 = new Player_PGS(1);
 		//p2 = new Player_NoOverKillAttackValue(1);
-		//p2=new Player_Random(1);
-		p2 = new Player_pg(1);
-		//p2 = new Player_KiteDPS(1);
-		//p2 = new Player_Watcher6(1);
 		//p2 = new UctLogic(tc.bwapi, new UCTCD(new UctConfig(1)),40);
 		//Player p2 = new RandomScriptLogic(1);
-		//p2 = new UctLogic(tc.bwapi, guctcdB, 40);
+		p2 = new UctLogic(tc.bwapi, guctcdB, 20);
 		//p2 = new UctLogic(tc.bwapi, rguctcdB, 40);
 		//p2 = new UctLogic(tc.bwapi, new UCTPortfolio_2(new UctConfig(1)), 40);
-		
-		tc.buf=new StringBuffer();
 		System.out.println("Player0: "+p1.toString());
 		System.out.println("Player1: "+p2.toString());
 		tc.buf.append("Player0: "+p1.toString()+"\r\n");
 		tc.buf.append("Player1: "+p2.toString()+"\r\n");
 		
-		int[] numOfUnitsInTest =  new int[]{4,8,16,32,48};
+		int[] numOfUnitsInTest =  new int[]{32,32,16,8,4};
 		int totalRuns = 50;
 		//tc.newTest(p1, p2, 100, numOfUnitsInTest);
 		
@@ -138,8 +139,8 @@ public class TestSymmetric2 implements BWAPIEventListener  {
 	    	e.printStackTrace();
 	    }
 		
-		tc.moreTest1(tc);
-		tc.moreTest2(tc);
+		
+		//tc.moreTest2(tc);
 	}
 	
 
@@ -216,8 +217,16 @@ public class TestSymmetric2 implements BWAPIEventListener  {
 			Player_Watcher7 pw = (Player_Watcher7) p;
 			pw.setNumUnit(i);
 		}
+		if(p instanceof Player_Watcher8){
+			Player_Watcher8 pw = (Player_Watcher8) p;
+			pw.setNumUnit(i);
+		}
 		if(p instanceof Player_pg){
 			Player_pg pw = (Player_pg) p;
+			pw.setNumUnit(i);
+		}
+		if(p instanceof Player_PGS){
+			Player_PGS pw = (Player_PGS) p;
 			pw.setNumUnit(i);
 		}
 	}
@@ -678,20 +687,24 @@ public class TestSymmetric2 implements BWAPIEventListener  {
 		*/
 	}
 	
-	public void moreTest1(TestSymmetric2 tc){
+	public void PGSvPGSEN(TestSymmetric2 tc){
 		Player p1;
-		p1 = new Player_Watcher7(0);
-		Player_Watcher7 pw = (Player_Watcher7) p1;
-		pw.initWeak();
+		p1 = new Player_PGS(0);
+		Player_PGS pp = (Player_PGS) p1;
+		pp.initEnhanced();
+		
 		Player p2;
-		p2 = new Player_pg(1);
+		p2 = new Player_PGS(1);
+		Player_PGS pp2 = (Player_PGS) p2;
+		pp2.initEnhanced();
+		
 		tc.buf=new StringBuffer();
 		System.out.println("Player0: "+p1.toString());
 		System.out.println("Player1: "+p2.toString());
 		tc.buf.append("Player0: "+p1.toString()+"\r\n");
 		tc.buf.append("Player1: "+p2.toString()+"\r\n");
 		
-		int[] numOfUnitsInTest =  new int[]{4,8,16,32,48};
+		int[] numOfUnitsInTest =  new int[]{48,8,16,32,48};
 		int totalRuns = 50;
 		
 		tc.newTest(p1, p2, totalRuns,numOfUnitsInTest,TestSetting.D);
