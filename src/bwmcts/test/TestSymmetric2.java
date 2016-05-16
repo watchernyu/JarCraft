@@ -40,7 +40,7 @@ import bwmcts.sparcraft.players.*;
 
 public class TestSymmetric2 implements BWAPIEventListener  {
 	
-	private static boolean graphics = false;
+	private static boolean graphics = true;
 	private static boolean SHOWALLRESULTS = true;
 	private static boolean LOGALLRESULTS = false;
 	BufferedWriter OUT;
@@ -86,7 +86,7 @@ public class TestSymmetric2 implements BWAPIEventListener  {
 				new ClusteringConfig(1, 6, new DynamicKMeans(30.0)));
 		
 ////////IN BETWEEN SET EXPERIMENTS///////////////////////////////////////////////////////////
-		boolean EXPERIMENT = true;
+		boolean EXPERIMENT = false;
 		String student = "";//cw,pc,ydl
 		if(EXPERIMENT){
 			if(student.equals("pc")){
@@ -112,7 +112,7 @@ public class TestSymmetric2 implements BWAPIEventListener  {
 ////////IN BETWEEN SET EXPERIMENTS///////////////////////////////////////////////////////////
 
 		Player p1;
-		p1 = new Player_Evolution(0);
+		p1 = new Player_Evolution_Clusters(0);
 		//p1 = new Player_PGS(0);
 		//p1 = new Player_NoOverKillAttackValue(0);
 		//p1 = new UctLogic(tc.bwapi, guctcdA, 40);
@@ -446,6 +446,10 @@ public class TestSymmetric2 implements BWAPIEventListener  {
 	}
 	
 	private void ensureUnitNumSetting(Player p,int i){
+		if(p instanceof Player_Evolution_Clusters){
+			Player_Evolution_Clusters pw = (Player_Evolution_Clusters) p;
+			pw.setNumUnit(i);
+		}
 		if(p instanceof Player_Watcher6){
 			Player_Watcher6 pw = (Player_Watcher6) p;
 			pw.setNumUnit(i);
