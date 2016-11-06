@@ -40,9 +40,14 @@ public class Player_Evolution extends Player {
 	long timeLimit = 20000000;
 	int EVALUTIONMETHOD = 1;//0 means LTD2, 1 means playout
 	int futureSteps = 3;
-	int numOfMutations = 25;
+	int numOfMutations = 100;
 	Population P;
 	boolean firstTimeInit;
+	
+	
+	int testcount = 0;//only for testing
+	boolean testcountenable = false;//only for testing, set to false when not testing
+	
 
 	public Player_Evolution(int playerID) {
 		firstTimeInit=true;
@@ -114,11 +119,25 @@ public class Player_Evolution extends Player {
 			P.evolve(1);
 			evolveCount++;
 		}
+		//System.out.println("evo: "+evolveCount);
 		ArrayList<Integer> bestDnaPiece = P.bestDna().get(0);
 		if(showBestDna){
 			System.out.println("BestDNA: "+bestDnaPiece);
 		}
 		//System.out.println("Evolve Count: "+evolveCount+" Time used: "+(System.nanoTime()-startTime)/1000000);
+		
+		
+		
+		if(testcountenable){
+			testcount++;
+			if(testcount>20&&testcount<300){
+				System.out.println(evolveCount);
+			}else if(testcount>=300){
+				System.out.println("OVEROVEROVER");
+				testcountenable=false;
+			}
+		}
+		
 		dnaMoves(state,bestDnaPiece,moves,moveVec);
 	}
 

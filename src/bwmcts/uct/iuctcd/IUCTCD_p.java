@@ -292,7 +292,7 @@ public class IUCTCD_p extends UCT {
 			}
 			
 		}
-		System.out.println();
+		//System.out.println();
 		
 		List<UnitAction> allActions = new ArrayList<UnitAction>();
 		ArrayList<HashMap<Integer, List<UnitAction>>> typeMap = new ArrayList<HashMap<Integer, List<UnitAction>>>();

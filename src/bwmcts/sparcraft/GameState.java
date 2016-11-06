@@ -390,6 +390,32 @@ public class GameState {
 		//return getUnit(getEnemy(player),_closestMoveIndex[player][unitIndex]);
 	}
 	
+	public Position getEnemyCenter(int player, int unitIndex){
+		int enemyPlayer=getEnemy(player);
+		Position myUnitPosition=getUnit(player,unitIndex).currentPosition(_currentTime);
+
+		int maxDist = -1; 
+		int maxUnitInd=0;
+	    //int minUnitID=255;
+
+		//Position currentPos = myUnit.currentPosition(_currentTime);
+		int distSq=0;
+		int totalX = 0;
+		int totalY = 0;
+		int count =0;
+		for (int u=0; u<_numUnits[enemyPlayer]; u++)
+		{
+			Position pppp = getUnit(enemyPlayer, u).currentPosition(_currentTime);
+			totalX += pppp.x;
+			totalY += pppp.y;
+			count++;
+		}
+
+		return new Position(totalX/count,totalY/count);
+		//return getUnit(getEnemy(player),_closestMoveIndex[player][unitIndex]);
+	}
+	
+	
 	public Unit getClosestEnemyUnit(Position myUnitPosition,int enemyPlayer,int minDist,int minUnitInd,int distSq){
 
 

@@ -1,0 +1,57 @@
+Player0: POE_new_2
+Player1: POE_new_2
+
+########## NEW GAME ########## units: 8 runs: 50
+Dragoon+Zealot: 8
+Game: 1 Win average: 1.0 score: 27.0
+Game: 2 Win average: 0.5 score: -202.0
+Game: 3 Win average: 0.6666666666666666 score: 63.0
+Game: 4 Win average: 0.75 score: 48.0
+Game: 5 Win average: 0.6 score: -27.0
+Game: 6 Win average: 0.6666666666666666 score: 27.0
+Game: 7 Win average: 0.5714285714285714 score: -27.0
+Game: 8 Win average: 0.5 score: -48.0
+Game: 9 Win average: 0.4444444444444444 score: -48.0
+Game: 10 Win average: 0.5 score: 175.0
+Game: 11 Win average: 0.45454545454545453 score: -48.0
+Game: 12 Win average: 0.5 score: 48.0
+Game: 13 Win average: 0.5384615384615384 score: 27.0
+Game: 14 Win average: 0.5714285714285714 score: 48.0
+Game: 15 Win average: 0.5333333333333333 score: -48.0
+Game: 16 Win average: 0.5 score: -112.0
+Game: 17 Win average: 0.47058823529411764 score: -75.0
+Game: 18 Win average: 0.4444444444444444 score: -27.0
+Game: 19 Win average: 0.47368421052631576 score: 48.0
+Game: 20 Win average: 0.5 score: 179.0
+Game: 21 Win average: 0.47619047619047616 score: -110.0
+Game: 22 Win average: 0.5 score: 27.0
+Game: 23 Win average: 0.5217391304347826 score: 63.0
+Game: 24 Win average: 0.5 score: -63.0
+Game: 25 Win average: 0.52 score: 112.0
+Game: 26 Win average: 0.5 score: -75.0
+Game: 27 Win average: 0.5185185185185185 score: 172.0
+Game: 28 Win average: 0.5357142857142857 score: 27.0
+Game: 29 Win average: 0.5517241379310345 score: 130.0
+Game: 30 Win average: 0.5666666666666667 score: 172.0
+Game: 31 Win average: 0.5806451612903226 score: 85.0
+Game: 32 Win average: 0.5625 score: -75.0
+Game: 33 Win average: 0.5757575757575758 score: 94.0
+Game: 34 Win average: 0.5588235294117647 score: -112.0
+Game: 35 Win average: 0.5714285714285714 score: 48.0
+Game: 36 Win average: 0.5833333333333334 score: 166.0
+Game: 37 Win average: 0.5945945945945946 score: 27.0
+Game: 38 Win average: 0.5789473684210527 score: -117.0
+Game: 39 Win average: 0.5641025641025641 score: -112.0
+Game: 40 Win average: 0.575 score: 27.0
+Game: 41 Win average: 0.5609756097560976 score: -192.0
+Game: 42 Win average: 0.5714285714285714 score: 94.0
+Game: 43 Win average: 0.5581395348837209 score: -110.0
+Game: 44 Win average: 0.5454545454545454 score: -144.0
+Game: 45 Win average: 0.5333333333333333 score: -75.0
+Game: 46 Win average: 0.5217391304347826 score: -102.0
+Game: 47 Win average: 0.5106382978723404 score: -112.0
+Game: 48 Win average: 0.5 score: -75.0
+Game: 49 Win average: 0.5102040816326531 score: 85.0
+Game: 50 Win average: 0.5 score: -27.0
+--------------- Score average: -2.88	Deviation: 97.5911143496169
+--------------- Win average: 0.5

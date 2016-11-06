@@ -40,15 +40,15 @@ import bwmcts.sparcraft.players.*;
 
 public class TestSymmetric2 implements BWAPIEventListener  {
 	
-	private static boolean graphics = false;
+	private static boolean graphics = true;
 	private static boolean SHOWALLRESULTS = true;
 	private static boolean LOGALLRESULTS = false;
 	BufferedWriter OUT;
 	JNIBWAPI bwapi;
 	StringBuffer BUF;
 	
-	int[] numOfUnitsInTest =  new int[]{4,16,32,48,96};
-	int totalRuns = 50;
+	int[] numOfUnitsInTest =  new int[]{4,8,16,32,64,96};
+	int totalRuns = 1;
 	
 	public static void main(String[] args) throws Exception{
 		System.out.println("Create TC instance");
@@ -86,8 +86,8 @@ public class TestSymmetric2 implements BWAPIEventListener  {
 				new ClusteringConfig(1, 6, new DynamicKMeans(30.0)));
 		
 ////////IN BETWEEN SET EXPERIMENTS///////////////////////////////////////////////////////////
-		boolean EXPERIMENT = true;
-		String student = "";//cw,pc,ydl
+		boolean EXPERIMENT = false;
+		String student = "cw";//cw,pc,ydl
 		if(EXPERIMENT){
 			if(student.equals("pc")){
 			    tc.Evolution_2_VS_NOKAV();
@@ -123,10 +123,10 @@ public class TestSymmetric2 implements BWAPIEventListener  {
 		//Player p2 = new Player_Nothing(1);
 		Player p2;
 		//p2 = new Player_PGS(1);
-		p2 = new Player_NoOverKillAttackValue(1);
+		//p2 = new Player_NoOverKillAttackValue(1);
 		//p2 = new UctLogic(tc.bwapi, new UCTCD(new UctConfig(1)),40);
 		//Player p2 = new RandomScriptLogic(1);
-		//p2 = new UctLogic(tc.bwapi, guctcdB, 20);
+		p2 = new UctLogic(tc.bwapi, guctcdB, 20);
 		//p2 = new UctLogic(tc.bwapi, rguctcdB, 40);
 		// p2 = new UctLogic(tc.bwapi, new UCTPortfolio_2(new UctConfig(1)), 40);
 		//p2 = new UctLogic(tc.bwapi, guctcd_p2, 20);
@@ -134,8 +134,8 @@ public class TestSymmetric2 implements BWAPIEventListener  {
 
 		//tc.newTest(p1, p2, 100, numOfUnitsInTest);
 		
-		tc.newTest(p1, p2, tc.totalRuns,tc.numOfUnitsInTest,TestSetting.D);
-		tc.newTest(p1, p2, tc.totalRuns,tc.numOfUnitsInTest,TestSetting.DZ);
+		//tc.newTest(p1, p2, tc.totalRuns,new int[]{96},TestSetting.D);
+		tc.newTest(p1, p2, tc.totalRuns,new int[]{96},TestSetting.DZ);
 		
 		//tc.newTest(p1, p2, totalRuns,numOfUnitsInTest,TestSetting.L);
 		//tc.newTest(p1, p2, totalRuns,numOfUnitsInTest,TestSetting.DM);

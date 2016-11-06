@@ -43,6 +43,17 @@ public class Player_PGS extends Player {
 	Player_pg_helper _pg_helper0;
 	Player_pg_helper _pg_helper1;
 
+	public void setTimeLimit(int tl){
+		timeLimit = tl * 1000000;
+	}
+	
+	public void setTimeLimit20(){
+		timeLimit = 20000000;
+	}
+	public void setTimeLimit40(){
+		timeLimit = 40000000;
+	}
+	
 	public Player_PGS(int playerID) {
 		_id = playerID;
 		_eid = (playerID + 1) % 2;

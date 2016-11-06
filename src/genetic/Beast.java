@@ -38,6 +38,4 @@ public class Beast implements Comparable<Beast>, Comparator<Beast>{
 	public String toString(){
 		return "DNA score: " + score;
 	}
-
-
 }
